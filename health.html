@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthy Living</title>
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+
+    <header>
+        <h1>Healthy Living</h1>
+        <p>Your guide to wellness and well-being</p>
+    </header>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">Nutrition</a>
+        <a href="#">Exercise</a>
+        <a href="#">Contact</a>
+    </nav>
+
+    <div class="container">
+        <div class="section health-tip">
+            <h2>Daily Health Tip</h2>
+            <img src="./C:\Users\varsh\OneDrive\Pictures\Screenshots\Screenshot 2025-05-09 151047.png" alt="Healthy Food">
+            <p id="healthTip">Loading...</p>
+        </div>
+
+        <div class="section">
+            <h2>Exercise Benefits</h2>
+            <img src="https://source.unsplash.com/800x500/?fitness,workout" alt="Exercise">
+            <p>Regular physical activity improves heart health, boosts mood, and strengthens muscles.</p>
+        </div>
+
+        <div class="section">
+            <h2>Contact Us</h2>
+            <p>Have questions? Send us a message.</p>
+            <input type="text" id="name" placeholder="Your Name">
+            <textarea id="message" rows="4" placeholder="Your Message"></textarea>
+            <button onclick="submitMessage()">Submit</button>
+            <p id="confirmation"></p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Healthy Living. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Random Health Tips
+        const healthTips = [
+            "Drink at least 2 liters of water daily!",
+            "Stretch for 5 minutes every morning.",
+            "Eat more fresh vegetables and fruits.",
+            "Exercise at least 30 minutes daily.",
+            "Get 7-8 hours of sleep each night.",
+            "Practice mindfulness to reduce stress."
+        ];
+        
+        function showHealthTip() {
+            let randomIndex = Math.floor(Math.random() * healthTips.length);
+            document.getElementById("healthTip").innerHTML = healthTips[randomIndex];
+        }
+        
+        showHealthTip();
+
+        // Contact Form Interaction
+        function submitMessage() {
+            let name = document.getElementById("name").value;
+            let message = document.getElementById("message").value;
+
+            if (name === "" || message === "") {
+                document.getElementById("confirmation").innerHTML = "Please fill in all fields.";
+            } else {
+                document.getElementById("confirmation").innerHTML = "Thank you, " + name + "! We will get back to you soon.";
+            }
+        }
+    </script>
+
+</body>
+</html>
+           

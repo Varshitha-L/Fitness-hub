@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        let a=window.prompt("enter the number")
+    console.log(a)
+     let b=window.prompt("enter the number")
+    console.log(b)
+    let c=window.prompt("enter the operation")
+    if (c === '+') result = add(a, b);
+            else if (c === '-') result = sub(a, b);
+            else if (c === '*') result = mul(a, b);
+            else if (c === '/') result = div(a, b);
+            else result = "Invalid operation";
+     function add(a,b){
+        let d=a+b
+        console.log(d)
+     }
+     function sub(a,b){
+        let e=a-b
+        console.log(e)
+     }
+     function mul(a,b){
+        let f=a*b
+        console.log(f)
+     }
+     if(b!=0){
+        function div(a,b){
+        let g=a/b
+        console.log(g)
+        }
+     } else{
+        console.log("division by 0 is not valid")
+     }
+     
+     
+     function mod(a,b){
+        let h=a%b
+        console.log(h)
+     }
+     switch(c){
+        case '+':
+            add(a,b)
+            break
+        case '-':
+            sub(a,b)
+            break
+        case '*':
+            mul(a,b)
+            break
+        case '/':
+            div(a,b)
+            break
+        case '%':
+            mod(a,b)
+            break
+        default :
+        console.log("you have entered wrong operator")
+            
+    }
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+
+* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f2f2f2;
+  color: #333;
+  text-align: center;
+}
+
+/* Header with Background Image */
+header {
+  background-image: url("https://source.unsplash.com/1600x900/?nature,wellness");
+  background-size: cover;
+  background-position: center;
+  color: white;
+  padding: 40px;
+  animation: fadeIn 2s ease-in;
+}
+
+/* Navigation */
+nav {
+  background-color: #333;
+  padding: 15px;
+}
+nav a {
+  color: white;
+  text-decoration: none;
+  margin: 15px;
+  padding: 10px;
+}
+
+/* Section Styling */
+.container {
+  padding: 20px;
+}
+.section {
+  margin: 20px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  animation: floatEffect 3s infinite alternate ease-in-out;
+}
+
+/* Floating Effect for Health Tips */
+@keyframes floatEffect {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
+
+/* Health Tip Image */
+.health-tip img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+/* Hover Button Animation */
+button {
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #388e3c;
+  transform: scale(1.1);
+}
+
+/* Footer */
+footer {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+/* Fade-In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
