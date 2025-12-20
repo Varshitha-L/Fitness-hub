@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<h2>BMI & Diet Calculator</h2>
+<input id="height" placeholder="Height (cm)">
+<input id="weight" placeholder="Weight (kg)">
+<input id="age" placeholder="Age">
+<select id="gender">
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+</select>
+<button onclick="calculateHealth()">Calculate</button>
+
+<p id="healthResult"></p>
+
+<hr>
+
+<h2>Daily Food Tracker</h2>
+<input id="foodName" placeholder="Food name">
+<input id="foodCalories" placeholder="Calories">
+<button onclick="addFood()">Add Food</button>
+
+<ul id="foodList"></ul>
+<p>Total Calories: <span id="totalCalories">0</span></p>
+
+<hr>
+
+<h2>Water Intake</h2>
+<button onclick="addWater()">Add Glass</button>
+<p>Water: <span id="waterCount">0</span> / 8</p>
+
+<hr>
+
+<h2>Daily Summary Chart</h2>
+<canvas id="chart"></canvas>
+
+<script src="script.js"></script>
+</body>
+</html>
