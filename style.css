@@ -1,36 +1,15 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: Arial;
     background: #f4f6f8;
+    padding: 30px;
 }
 
-.container {
-    width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-}
-
-h1 {
-    text-align: center;
-    color: #2c3e50;
-}
-
-label {
-    margin-top: 10px;
-    display: block;
-}
-
-input, select {
-    width: 100%;
+input, select, button {
     padding: 8px;
-    margin-top: 5px;
+    margin: 5px;
 }
 
 button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 20px;
     background: #27ae60;
     color: white;
     border: none;
@@ -41,10 +20,7 @@ button:hover {
     background: #219150;
 }
 
-#result {
-    margin-top: 20px;
-    padding: 15px;
-    background: #ecf0f1;
-    border-radius: 5px;
+hr {
+    margin: 20px 0;
 }
 
