@@ -5,164 +5,135 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fitness Hub</title>
 
+<!-- Bootstrap 5 CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <style>
 /* ---------- THEME VARIABLES ---------- */
 :root {
-    --bg-main: linear-gradient(to right, #1d2671, #c33764);
-    --bg-section: rgba(255,255,255,0.12);
-    --bg-card: rgba(0,0,0,0.5);
-    --bg-nav: rgba(0,0,0,0.7);
     --text-color: #ffffff;
-    --heading-color: #ffdd59;
+    --card-bg: rgba(0,0,0,0.6);
 }
 
 body.light {
-    --bg-main: #f4f6f8;
-    --bg-section: #ffffff;
-    --bg-card: #eaeaea;
-    --bg-nav: #2c3e50;
     --text-color: #000000;
-    --heading-color: #2c3e50;
+    --card-bg: rgba(255,255,255,0.9);
 }
 
-/* ---------- GLOBAL ---------- */
+/* ---------- BACKGROUND IMAGES ---------- */
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: var(--bg-main);
+    min-height: 100vh;
+    background: url("https://images.unsplash.com/photo-1554284126-aa88f22d8b74") center/cover no-repeat fixed;
     color: var(--text-color);
-    transition: 0.3s;
+    transition: background 0.6s ease, color 0.4s ease;
 }
 
-header {
-    background: var(--bg-nav);
-    text-align: center;
-    padding: 25px;
+body.light {
+    background: url("https://images.unsplash.com/photo-1558611848-73f7eb4001a1") center/cover no-repeat fixed;
 }
 
-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--bg-nav);
+/* ---------- OVERLAY ---------- */
+.overlay {
+    background: rgba(0,0,0,0.6);
+    min-height: 100vh;
+    transition: background 0.4s ease;
 }
 
-nav a {
-    color: var(--text-color);
-    padding: 14px 20px;
-    text-decoration: none;
-    text-transform: uppercase;
+body.light .overlay {
+    background: rgba(255,255,255,0.6);
 }
 
-nav a:hover {
-    background: #1abc9c;
+/* ---------- CARDS ---------- */
+.card-custom {
+    background: var(--card-bg);
+    transition: background 0.4s ease, transform 0.3s;
 }
 
-.theme-toggle {
-    margin-left: 15px;
-    font-size: 22px;
-    cursor: pointer;
+.card-custom:hover {
+    transform: translateY(-5px);
+}
+
+/* ---------- THEME ICON ---------- */
+.theme-btn {
     background: none;
     border: none;
+    font-size: 22px;
     color: var(--text-color);
+    cursor: pointer;
 }
 
-.container {
-    max-width: 1000px;
-    margin: 30px auto;
-    padding: 40px 20px;
-    background: var(--bg-section);
-    border-radius: 10px;
-}
-
-h2, h3 {
-    color: var(--heading-color);
-}
-
-.program-card {
-    background: var(--bg-card);
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-footer {
-    background: var(--bg-nav);
-    text-align: center;
-    padding: 12px;
-    margin-top: 40px;
+/* ---------- LOGIN BOX ---------- */
+.login-box {
+    max-width: 350px;
+    margin: 40px auto;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-    <h1>Fitness Hub</h1>
-    <p>Your journey to a healthier life starts here</p>
-</header>
+<div class="overlay">
 
-<nav>
-    <a href="#home">Home</a>
-    <a href="#about">About</a>
-    <a href="#programs">Programs</a>
-    <a href="#trainers">Trainers</a>
-    <a href="#contact">Contact</a>
-    <button class="theme-toggle" id="themeBtn">🌙</button>
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+    <a class="navbar-brand" href="#">Fitness Hub</a>
+    <div class="ms-auto d-flex align-items-center">
+        <span id="userLabel" class="me-3"></span>
+        <button class="theme-btn" id="themeBtn">🌙</button>
+    </div>
 </nav>
 
-<section id="home" class="container">
-    <h2>Welcome</h2>
-    <p>Achieve your fitness goals with expert trainers.</p>
-</section>
+<!-- LOGIN -->
+<div class="login-box text-center" id="loginBox">
+    <div class="card card-custom p-4">
+        <h4>Login</h4>
+        <input type="text" id="username" class="form-control my-3" placeholder="Enter username">
+        <button class="btn btn-primary w-100" onclick="login()">Login</button>
+    </div>
+</div>
 
-<section id="about" class="container">
-    <h2>About Us</h2>
-    <p>Personalized training, nutrition guidance, and wellness support.</p>
-</section>
+<!-- CONTENT -->
+<div class="container py-5 d-none" id="mainContent">
 
-<section id="programs" class="container">
-    <h2>Programs</h2>
-
-    <div class="program-card">
-        <h3>Beginner Fitness</h3>
-        <p>Easy routines for beginners.</p>
+    <div class="text-center mb-5">
+        <h1>Welcome to Fitness Hub</h1>
+        <p>Your journey to a healthier life starts here</p>
     </div>
 
-    <div class="program-card">
-        <h3>Weight Loss</h3>
-        <p>Burn calories effectively.</p>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card card-custom p-4">
+                <h4>Beginner Fitness</h4>
+                <p>Simple routines for newcomers.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card card-custom p-4">
+                <h4>Weight Loss</h4>
+                <p>Burn calories effectively.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card card-custom p-4">
+                <h4>Muscle Building</h4>
+                <p>Advanced strength programs.</p>
+            </div>
+        </div>
     </div>
 
-    <div class="program-card">
-        <h3>Muscle Building</h3>
-        <p>Strength-focused workouts.</p>
-    </div>
-</section>
+</div>
 
-<section id="trainers" class="container">
-    <h2>Trainers</h2>
-    <ul>
-        <li>John – Strength Coach</li>
-        <li>Jane – Nutrition Expert</li>
-        <li>Alex – Cardio Trainer</li>
-    </ul>
-</section>
-
-<section id="contact" class="container">
-    <h2>Contact</h2>
-    <p>Email: info@fitnesshub.com</p>
-    <p>Phone: +91 12345 67890</p>
-</section>
-
-<footer>
-    <p>&copy; 2025 Fitness Hub</p>
-</footer>
+</div>
 
 <script>
 const themeBtn = document.getElementById("themeBtn");
+const loginBox = document.getElementById("loginBox");
+const mainContent = document.getElementById("mainContent");
+const userLabel = document.getElementById("userLabel");
 
-/* ---------- APPLY SAVED / SYSTEM THEME ---------- */
+/* ---------- THEME FUNCTIONS ---------- */
 function applyTheme(theme) {
     if (theme === "light") {
         document.body.classList.add("light");
@@ -173,26 +144,52 @@ function applyTheme(theme) {
     }
 }
 
-/* Check localStorage */
-let savedTheme = localStorage.getItem("theme");
-
-if (savedTheme) {
-    applyTheme(savedTheme);
-} else {
-    /* System theme detection */
-    let systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    applyTheme(systemDark ? "dark" : "light");
+function loadTheme(username) {
+    let savedTheme = localStorage.getItem(username + "_theme");
+    if (savedTheme) {
+        applyTheme(savedTheme);
+    } else {
+        let systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        applyTheme(systemDark ? "dark" : "light");
+    }
 }
 
 /* ---------- TOGGLE ---------- */
-themeBtn.addEventListener("click", () => {
+themeBtn.onclick = () => {
+    let user = localStorage.getItem("user");
     let isLight = document.body.classList.contains("light");
     let newTheme = isLight ? "dark" : "light";
-    localStorage.setItem("theme", newTheme);
     applyTheme(newTheme);
-});
+    if (user) {
+        localStorage.setItem(user + "_theme", newTheme);
+    }
+};
+
+/* ---------- LOGIN ---------- */
+function login() {
+    let username = document.getElementById("username").value;
+    if (!username) return alert("Enter username");
+
+    localStorage.setItem("user", username);
+    userLabel.textContent = "Hi, " + username;
+
+    loginBox.classList.add("d-none");
+    mainContent.classList.remove("d-none");
+
+    loadTheme(username);
+}
+
+/* ---------- AUTO LOGIN ---------- */
+let existingUser = localStorage.getItem("user");
+if (existingUser) {
+    userLabel.textContent = "Hi, " + existingUser;
+    loginBox.classList.add("d-none");
+    mainContent.classList.remove("d-none");
+    loadTheme(existingUser);
+}
 </script>
 
 </body>
 </html>
+
 
