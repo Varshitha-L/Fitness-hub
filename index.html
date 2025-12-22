@@ -1,74 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fitness Hub</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            background: linear-gradient(to right, #1d2671, #c33764);
-            color: #fff;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fitness Hub</title>
 
-        header {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 25px 0;
-            text-align: center;
-        }
+<style>
+/* ---------- THEME VARIABLES ---------- */
+:root {
+    --bg-main: linear-gradient(to right, #1d2671, #c33764);
+    --bg-section: rgba(255,255,255,0.12);
+    --bg-card: rgba(0,0,0,0.5);
+    --bg-nav: rgba(0,0,0,0.7);
+    --text-color: #ffffff;
+    --heading-color: #ffdd59;
+}
 
-        nav {
-            display: flex;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.7);
-        }
+body.light {
+    --bg-main: #f4f6f8;
+    --bg-section: #ffffff;
+    --bg-card: #eaeaea;
+    --bg-nav: #2c3e50;
+    --text-color: #000000;
+    --heading-color: #2c3e50;
+}
 
-        nav a {
-            color: #fff;
-            padding: 14px 20px;
-            text-decoration: none;
-            text-transform: uppercase;
-        }
+/* ---------- GLOBAL ---------- */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--bg-main);
+    color: var(--text-color);
+    transition: 0.3s;
+}
 
-        nav a:hover {
-            background-color: #1abc9c;
-        }
+header {
+    background: var(--bg-nav);
+    text-align: center;
+    padding: 25px;
+}
 
-        .container {
-            padding: 40px 20px;
-            max-width: 1000px;
-            margin: auto;
-            background: rgba(255, 255, 255, 0.12);
-            border-radius: 10px;
-            margin-top: 30px;
-        }
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--bg-nav);
+}
 
-        h2, h3 {
-            color: #ffdd59;
-        }
+nav a {
+    color: var(--text-color);
+    padding: 14px 20px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
 
-        .program-card {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-        }
+nav a:hover {
+    background: #1abc9c;
+}
 
-        ul li {
-            margin-bottom: 8px;
-        }
+.theme-toggle {
+    margin-left: 15px;
+    font-size: 22px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: var(--text-color);
+}
 
-        footer {
-            background: rgba(0, 0, 0, 0.7);
-            text-align: center;
-            padding: 12px;
-            margin-top: 40px;
-        }
-    </style>
+.container {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 40px 20px;
+    background: var(--bg-section);
+    border-radius: 10px;
+}
+
+h2, h3 {
+    color: var(--heading-color);
+}
+
+.program-card {
+    background: var(--bg-card);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+footer {
+    background: var(--bg-nav);
+    text-align: center;
+    padding: 12px;
+    margin-top: 40px;
+}
+</style>
 </head>
+
 <body>
 
 <header>
@@ -82,55 +108,91 @@
     <a href="#programs">Programs</a>
     <a href="#trainers">Trainers</a>
     <a href="#contact">Contact</a>
+    <button class="theme-toggle" id="themeBtn">🌙</button>
 </nav>
 
 <section id="home" class="container">
-    <h2>Welcome to Fitness Hub</h2>
-    <p>Fitness Hub helps you achieve your fitness goals with structured workouts and expert guidance.</p>
+    <h2>Welcome</h2>
+    <p>Achieve your fitness goals with expert trainers.</p>
 </section>
 
 <section id="about" class="container">
     <h2>About Us</h2>
-    <p>We provide personalized fitness plans, nutrition advice, and professional coaching to help you stay fit and healthy.</p>
+    <p>Personalized training, nutrition guidance, and wellness support.</p>
 </section>
 
 <section id="programs" class="container">
-    <h2>Our Programs</h2>
+    <h2>Programs</h2>
 
     <div class="program-card">
         <h3>Beginner Fitness</h3>
-        <p>Ideal for newcomers focusing on basic strength and flexibility.</p>
+        <p>Easy routines for beginners.</p>
     </div>
 
     <div class="program-card">
-        <h3>Weight Loss Program</h3>
-        <p>Burn fat and improve endurance with guided workouts.</p>
+        <h3>Weight Loss</h3>
+        <p>Burn calories effectively.</p>
     </div>
 
     <div class="program-card">
         <h3>Muscle Building</h3>
-        <p>Advanced strength training programs for muscle growth.</p>
+        <p>Strength-focused workouts.</p>
     </div>
 </section>
 
 <section id="trainers" class="container">
-    <h2>Meet Our Trainers</h2>
+    <h2>Trainers</h2>
     <ul>
-        <li>John Doe – Strength Coach</li>
-        <li>Jane Smith – Nutrition Expert</li>
-        <li>Alex Lee – Cardio Trainer</li>
+        <li>John – Strength Coach</li>
+        <li>Jane – Nutrition Expert</li>
+        <li>Alex – Cardio Trainer</li>
     </ul>
 </section>
 
 <section id="contact" class="container">
-    <h2>Contact Us</h2>
+    <h2>Contact</h2>
     <p>Email: info@fitnesshub.com</p>
     <p>Phone: +91 12345 67890</p>
 </section>
 
 <footer>
-    <p>&copy; 2025 Fitness Hub. All Rights Reserved.</p>
+    <p>&copy; 2025 Fitness Hub</p>
 </footer>
+
+<script>
+const themeBtn = document.getElementById("themeBtn");
+
+/* ---------- APPLY SAVED / SYSTEM THEME ---------- */
+function applyTheme(theme) {
+    if (theme === "light") {
+        document.body.classList.add("light");
+        themeBtn.textContent = "☀️";
+    } else {
+        document.body.classList.remove("light");
+        themeBtn.textContent = "🌙";
+    }
+}
+
+/* Check localStorage */
+let savedTheme = localStorage.getItem("theme");
+
+if (savedTheme) {
+    applyTheme(savedTheme);
+} else {
+    /* System theme detection */
+    let systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    applyTheme(systemDark ? "dark" : "light");
+}
+
+/* ---------- TOGGLE ---------- */
+themeBtn.addEventListener("click", () => {
+    let isLight = document.body.classList.contains("light");
+    let newTheme = isLight ? "dark" : "light";
+    localStorage.setItem("theme", newTheme);
+    applyTheme(newTheme);
+});
+</script>
 
 </body>
 </html>
+
