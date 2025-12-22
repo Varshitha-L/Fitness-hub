@@ -1,19 +1,136 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Fitness App Login</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Hub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background: linear-gradient(to right, #1d2671, #c33764);
+            color: #fff;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 25px 0;
+            text-align: center;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        nav a {
+            color: #fff;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+        nav a:hover {
+            background-color: #1abc9c;
+        }
+
+        .container {
+            padding: 40px 20px;
+            max-width: 1000px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        h2, h3 {
+            color: #ffdd59;
+        }
+
+        .program-card {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        ul li {
+            margin-bottom: 8px;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.7);
+            text-align: center;
+            padding: 12px;
+            margin-top: 40px;
+        }
+    </style>
 </head>
 <body>
 
-<h2>Fitness Health App</h2>
+<header>
+    <h1>Fitness Hub</h1>
+    <p>Your journey to a healthier life starts here</p>
+</header>
 
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
+<nav>
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#programs">Programs</a>
+    <a href="#trainers">Trainers</a>
+    <a href="#contact">Contact</a>
+</nav>
 
-<button onclick="register()">Register</button>
-<button onclick="login()">Login</button>
+<section id="home" class="container">
+    <h2>Welcome to Fitness Hub</h2>
+    <p>Fitness Hub helps you achieve your fitness goals with structured workouts and expert guidance.</p>
+</section>
 
-<script src="script.js"></script>
+<section id="about" class="container">
+    <h2>About Us</h2>
+    <p>We provide personalized fitness plans, nutrition advice, and professional coaching to help you stay fit and healthy.</p>
+</section>
+
+<section id="programs" class="container">
+    <h2>Our Programs</h2>
+
+    <div class="program-card">
+        <h3>Beginner Fitness</h3>
+        <p>Ideal for newcomers focusing on basic strength and flexibility.</p>
+    </div>
+
+    <div class="program-card">
+        <h3>Weight Loss Program</h3>
+        <p>Burn fat and improve endurance with guided workouts.</p>
+    </div>
+
+    <div class="program-card">
+        <h3>Muscle Building</h3>
+        <p>Advanced strength training programs for muscle growth.</p>
+    </div>
+</section>
+
+<section id="trainers" class="container">
+    <h2>Meet Our Trainers</h2>
+    <ul>
+        <li>John Doe – Strength Coach</li>
+        <li>Jane Smith – Nutrition Expert</li>
+        <li>Alex Lee – Cardio Trainer</li>
+    </ul>
+</section>
+
+<section id="contact" class="container">
+    <h2>Contact Us</h2>
+    <p>Email: info@fitnesshub.com</p>
+    <p>Phone: +91 12345 67890</p>
+</section>
+
+<footer>
+    <p>&copy; 2025 Fitness Hub. All Rights Reserved.</p>
+</footer>
+
 </body>
 </html>
