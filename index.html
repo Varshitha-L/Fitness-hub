@@ -2,194 +2,175 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>Fitness Hub – All in One</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fitness Hub</title>
 
-<!-- Bootstrap 5 CDN -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
 
 <style>
-/* ---------- THEME VARIABLES ---------- */
-:root {
-    --text-color: #ffffff;
-    --card-bg: rgba(0,0,0,0.6);
-}
-
-body.light {
-    --text-color: #000000;
-    --card-bg: rgba(255,255,255,0.9);
-}
-
-/* ---------- BACKGROUND IMAGES ---------- */
 body {
-    min-height: 100vh;
-    background: url("https://images.unsplash.com/photo-1554284126-aa88f22d8b74") center/cover no-repeat fixed;
-    color: var(--text-color);
-    transition: background 0.6s ease, color 0.4s ease;
+  transition: background 0.6s ease, color 0.4s ease;
 }
-
-body.light {
-    background: url("https://images.unsplash.com/photo-1558611848-73f7eb4001a1") center/cover no-repeat fixed;
+.dark-bg {
+  background-image: url("https://images.unsplash.com/photo-1554284126-aa88f22d8b74");
 }
-
-/* ---------- OVERLAY ---------- */
-.overlay {
-    background: rgba(0,0,0,0.6);
-    min-height: 100vh;
-    transition: background 0.4s ease;
+.light-bg {
+  background-image: url("https://images.unsplash.com/photo-1558611848-73f7eb4001a1");
 }
-
-body.light .overlay {
-    background: rgba(255,255,255,0.6);
-}
-
-/* ---------- CARDS ---------- */
-.card-custom {
-    background: var(--card-bg);
-    transition: background 0.4s ease, transform 0.3s;
-}
-
-.card-custom:hover {
-    transform: translateY(-5px);
-}
-
-/* ---------- THEME ICON ---------- */
-.theme-btn {
-    background: none;
-    border: none;
-    font-size: 22px;
-    color: var(--text-color);
-    cursor: pointer;
-}
-
-/* ---------- LOGIN BOX ---------- */
-.login-box {
-    max-width: 350px;
-    margin: 40px auto;
+.bg-cover-fixed {
+  background-size: cover;
+  background-attachment: fixed;
 }
 </style>
 </head>
 
-<body>
-
-<div class="overlay">
+<body class="min-h-screen dark-bg bg-cover-fixed text-white">
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
-    <a class="navbar-brand" href="#">Fitness Hub</a>
-    <div class="ms-auto d-flex align-items-center">
-        <span id="userLabel" class="me-3"></span>
-        <button class="theme-btn" id="themeBtn">🌙</button>
-    </div>
+<nav class="flex justify-between items-center p-4 bg-black/70">
+  <h1 class="text-xl font-bold">Fitness Hub</h1>
+  <div class="flex items-center gap-4">
+    <span id="userLabel"></span>
+    <button id="themeBtn" class="text-2xl">🌙</button>
+    <button onclick="logout()" class="bg-red-500 px-3 py-1 rounded hidden" id="logoutBtn">Logout</button>
+  </div>
 </nav>
 
 <!-- LOGIN -->
-<div class="login-box text-center" id="loginBox">
-    <div class="card card-custom p-4">
-        <h4>Login</h4>
-        <input type="text" id="username" class="form-control my-3" placeholder="Enter username">
-        <button class="btn btn-primary w-100" onclick="login()">Login</button>
+<section id="loginSection" class="flex justify-center mt-12">
+  <div class="bg-black/70 p-6 rounded w-80">
+    <h2 class="text-center text-lg mb-4">Login</h2>
+    <input id="email" class="w-full p-2 mb-3 text-black rounded" placeholder="Email">
+    <input id="password" type="password" class="w-full p-2 mb-3 text-black rounded" placeholder="Password">
+    <select id="role" class="w-full p-2 mb-3 text-black rounded">
+      <option value="user">User</option>
+      <option value="admin">Admin</option>
+    </select>
+    <button onclick="login()" class="bg-blue-500 w-full p-2 rounded">Login</button>
+  </div>
+</section>
+
+<!-- USER DASHBOARD -->
+<section id="userDashboard" class="hidden p-6">
+  <h2 class="text-2xl text-center mb-6">Diet Plan Calculator</h2>
+
+  <div class="max-w-md mx-auto bg-black/70 p-6 rounded">
+    <input id="weight" type="number" placeholder="Weight (kg)" class="w-full p-2 mb-3 text-black rounded">
+    <input id="height" type="number" placeholder="Height (cm)" class="w-full p-2 mb-3 text-black rounded">
+    <select id="goal" class="w-full p-2 mb-3 text-black rounded">
+      <option value="loss">Weight Loss</option>
+      <option value="maintain">Maintain</option>
+      <option value="gain">Muscle Gain</option>
+    </select>
+    <button onclick="calculateDiet()" class="bg-green-500 w-full p-2 rounded">Calculate</button>
+    <p id="dietResult" class="mt-4 text-center font-semibold"></p>
+  </div>
+</section>
+
+<!-- ADMIN DASHBOARD -->
+<section id="adminDashboard" class="hidden p-6">
+  <h2 class="text-3xl mb-6 text-center">Admin Dashboard</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="bg-black/70 p-4 rounded">
+      <h3>Total Users</h3>
+      <p class="text-2xl">120</p>
     </div>
-</div>
-
-<!-- CONTENT -->
-<div class="container py-5 d-none" id="mainContent">
-
-    <div class="text-center mb-5">
-        <h1>Welcome to Fitness Hub</h1>
-        <p>Your journey to a healthier life starts here</p>
+    <div class="bg-black/70 p-4 rounded">
+      <h3>Active Diet Plans</h3>
+      <p class="text-2xl">45</p>
     </div>
-
-    <div class="row g-4">
-        <div class="col-md-4">
-            <div class="card card-custom p-4">
-                <h4>Beginner Fitness</h4>
-                <p>Simple routines for newcomers.</p>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card card-custom p-4">
-                <h4>Weight Loss</h4>
-                <p>Burn calories effectively.</p>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card card-custom p-4">
-                <h4>Muscle Building</h4>
-                <p>Advanced strength programs.</p>
-            </div>
-        </div>
+    <div class="bg-black/70 p-4 rounded">
+      <h3>Calculations Done</h3>
+      <p class="text-2xl">300+</p>
     </div>
+  </div>
+</section>
 
-</div>
+<!-- FIREBASE + LOGIC -->
+<script type="module">
+/* ---------- FIREBASE SETUP (PLACEHOLDER) ---------- */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-</div>
-
-<script>
-const themeBtn = document.getElementById("themeBtn");
-const loginBox = document.getElementById("loginBox");
-const mainContent = document.getElementById("mainContent");
-const userLabel = document.getElementById("userLabel");
-
-/* ---------- THEME FUNCTIONS ---------- */
-function applyTheme(theme) {
-    if (theme === "light") {
-        document.body.classList.add("light");
-        themeBtn.textContent = "☀️";
-    } else {
-        document.body.classList.remove("light");
-        themeBtn.textContent = "🌙";
-    }
-}
-
-function loadTheme(username) {
-    let savedTheme = localStorage.getItem(username + "_theme");
-    if (savedTheme) {
-        applyTheme(savedTheme);
-    } else {
-        let systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        applyTheme(systemDark ? "dark" : "light");
-    }
-}
-
-/* ---------- TOGGLE ---------- */
-themeBtn.onclick = () => {
-    let user = localStorage.getItem("user");
-    let isLight = document.body.classList.contains("light");
-    let newTheme = isLight ? "dark" : "light";
-    applyTheme(newTheme);
-    if (user) {
-        localStorage.setItem(user + "_theme", newTheme);
-    }
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  appId: "YOUR_APP_ID"
 };
 
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
 /* ---------- LOGIN ---------- */
-function login() {
-    let username = document.getElementById("username").value;
-    if (!username) return alert("Enter username");
+window.login = function () {
+  const emailVal = email.value;
+  const passVal = password.value;
+  const roleVal = role.value;
 
-    localStorage.setItem("user", username);
-    userLabel.textContent = "Hi, " + username;
+  signInWithEmailAndPassword(auth, emailVal, passVal)
+    .then(() => {
+      localStorage.setItem("user", emailVal);
+      localStorage.setItem("role", roleVal);
+      showDashboard(roleVal);
+    })
+    .catch(err => alert(err.message));
+};
 
-    loginBox.classList.add("d-none");
-    mainContent.classList.remove("d-none");
+/* ---------- DASHBOARD SWITCH ---------- */
+function showDashboard(role) {
+  loginSection.classList.add("hidden");
+  logoutBtn.classList.remove("hidden");
+  userLabel.textContent = "Logged in";
 
-    loadTheme(username);
+  if (role === "admin") {
+    adminDashboard.classList.remove("hidden");
+  } else {
+    userDashboard.classList.remove("hidden");
+  }
 }
 
+/* ---------- LOGOUT ---------- */
+window.logout = function () {
+  signOut(auth).then(() => {
+    localStorage.clear();
+    location.reload();
+  });
+};
+
+/* ---------- DIET CALCULATOR ---------- */
+window.calculateDiet = function () {
+  const w = Number(weight.value);
+  const goalVal = goal.value;
+
+  let calories = 24 * w;
+  if (goalVal === "loss") calories -= 500;
+  if (goalVal === "gain") calories += 500;
+
+  dietResult.textContent = `Recommended Intake: ${calories} kcal/day`;
+};
+
+/* ---------- THEME TOGGLE ---------- */
+const themeBtn = document.getElementById("themeBtn");
+themeBtn.onclick = () => {
+  document.body.classList.toggle("light-bg");
+  document.body.classList.toggle("dark-bg");
+  document.body.classList.toggle("text-black");
+  document.body.classList.toggle("text-white");
+  themeBtn.textContent =
+    themeBtn.textContent === "🌙" ? "☀️" : "🌙";
+};
+
 /* ---------- AUTO LOGIN ---------- */
-let existingUser = localStorage.getItem("user");
-if (existingUser) {
-    userLabel.textContent = "Hi, " + existingUser;
-    loginBox.classList.add("d-none");
-    mainContent.classList.remove("d-none");
-    loadTheme(existingUser);
+const savedUser = localStorage.getItem("user");
+const savedRole = localStorage.getItem("role");
+if (savedUser && savedRole) {
+  showDashboard(savedRole);
 }
 </script>
 
 </body>
 </html>
-
-
