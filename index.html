@@ -53,9 +53,11 @@ body {
 
 <!-- USER DASHBOARD -->
 <section id="userDashboard" class="hidden p-6">
-  <h2 class="text-2xl text-center mb-6">Diet Plan Calculator</h2>
+  <h2 class="text-2xl text-center mb-6">User Dashboard</h2>
 
-  <div class="max-w-md mx-auto bg-black/70 p-6 rounded">
+  <!-- Diet -->
+  <div class="max-w-md mx-auto bg-black/70 p-6 rounded mb-6">
+    <h3 class="text-xl mb-3 text-center">Diet Plan Calculator</h3>
     <input id="weight" type="number" placeholder="Weight (kg)" class="w-full p-2 mb-3 text-black rounded">
     <input id="height" type="number" placeholder="Height (cm)" class="w-full p-2 mb-3 text-black rounded">
     <select id="goal" class="w-full p-2 mb-3 text-black rounded">
@@ -64,7 +66,42 @@ body {
       <option value="gain">Muscle Gain</option>
     </select>
     <button onclick="calculateDiet()" class="bg-green-500 w-full p-2 rounded">Calculate</button>
-    <p id="dietResult" class="mt-4 text-center font-semibold"></p>
+    <p id="dietResult" class="mt-3 text-center font-semibold"></p>
+  </div>
+
+  <!-- BMI -->
+  <div class="max-w-md mx-auto bg-black/70 p-6 rounded mb-6">
+    <h3 class="text-xl mb-3 text-center">BMI Calculator</h3>
+    <button onclick="calculateBMI()" class="bg-indigo-500 w-full p-2 rounded">
+      Calculate BMI
+    </button>
+    <p id="bmiResult" class="mt-3 text-center font-semibold"></p>
+  </div>
+
+  <!-- Water -->
+  <div class="max-w-md mx-auto bg-black/70 p-6 rounded mb-6">
+    <h3 class="text-xl mb-3 text-center">Water Intake</h3>
+    <div class="flex justify-center gap-4">
+      <button onclick="addWater(250)" class="bg-blue-500 px-4 py-2 rounded">+250ml</button>
+      <button onclick="addWater(500)" class="bg-blue-700 px-4 py-2 rounded">+500ml</button>
+    </div>
+    <p id="waterResult" class="mt-3 text-center font-semibold"></p>
+  </div>
+
+  <!-- Workout -->
+  <div class="max-w-md mx-auto bg-black/70 p-6 rounded">
+    <h3 class="text-xl mb-3 text-center">Workout Planner</h3>
+    <select id="workoutDay" class="w-full p-2 mb-3 text-black rounded">
+      <option>Monday</option>
+      <option>Tuesday</option>
+      <option>Wednesday</option>
+      <option>Thursday</option>
+      <option>Friday</option>
+      <option>Saturday</option>
+    </select>
+    <input id="workoutPlan" class="w-full p-2 mb-3 text-black rounded" placeholder="Workout plan">
+    <button onclick="saveWorkout()" class="bg-purple-500 w-full p-2 rounded">Save</button>
+    <ul id="workoutList" class="mt-4 text-sm"></ul>
   </div>
 </section>
 
@@ -72,110 +109,107 @@ body {
 <section id="adminDashboard" class="hidden p-6">
   <h2 class="text-3xl mb-6 text-center">Admin Dashboard</h2>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
     <div class="bg-black/70 p-4 rounded">
       <h3>Total Users</h3>
       <p class="text-2xl">120</p>
     </div>
     <div class="bg-black/70 p-4 rounded">
-      <h3>Active Diet Plans</h3>
+      <h3>Active Plans</h3>
       <p class="text-2xl">45</p>
     </div>
     <div class="bg-black/70 p-4 rounded">
-      <h3>Calculations Done</h3>
+      <h3>Calculations</h3>
       <p class="text-2xl">300+</p>
     </div>
   </div>
+
+  <div class="bg-black/70 p-6 rounded">
+    <h3 class="text-xl mb-4 text-center">Recent Activity</h3>
+    <ul class="text-sm space-y-2">
+      <li>• User logged in</li>
+      <li>• Diet calculated</li>
+      <li>• Water updated</li>
+      <li>• Workout saved</li>
+    </ul>
+  </div>
 </section>
 
-<!-- LOGIC -->
-<script type="module">
-/* ---------- FIREBASE SETUP ---------- */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut }
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+<script>
+/* ---------- LOGIN (SIMULATED) ---------- */
+function login() {
+  const role = document.getElementById("role").value;
+  localStorage.setItem("role", role);
+  showDashboard(role);
+}
 
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  appId: "YOUR_APP_ID"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-/* ---------- DOM ---------- */
-const loginSection = document.getElementById("loginSection");
-const userDashboard = document.getElementById("userDashboard");
-const adminDashboard = document.getElementById("adminDashboard");
-const logoutBtn = document.getElementById("logoutBtn");
-const userLabel = document.getElementById("userLabel");
-
-/* ---------- LOGIN ---------- */
-window.login = function () {
-  const emailVal = email.value.trim();
-  const passVal = password.value.trim();
-  const roleVal = role.value;
-
-  if (!emailVal || !passVal) {
-    alert("Please enter email and password");
-    return;
-  }
-
-  signInWithEmailAndPassword(auth, emailVal, passVal)
-    .then(() => {
-      localStorage.setItem("user", emailVal);
-      localStorage.setItem("role", roleVal);
-      showDashboard(roleVal);
-    })
-    .catch(err => alert(err.message));
-};
-
-/* ---------- DASHBOARD ---------- */
 function showDashboard(role) {
   loginSection.classList.add("hidden");
   userDashboard.classList.add("hidden");
   adminDashboard.classList.add("hidden");
-
   logoutBtn.classList.remove("hidden");
   userLabel.textContent = role.toUpperCase();
-
   role === "admin"
     ? adminDashboard.classList.remove("hidden")
     : userDashboard.classList.remove("hidden");
 }
 
-/* ---------- LOGOUT ---------- */
 logoutBtn.onclick = () => {
-  signOut(auth).then(() => {
-    localStorage.clear();
-    location.reload();
-  });
+  localStorage.clear();
+  location.reload();
 };
 
-/* ---------- DIET CALCULATOR ---------- */
-window.calculateDiet = function () {
+/* ---------- DIET ---------- */
+function calculateDiet() {
   const w = Number(weight.value);
-  const h = Number(height.value);
   const g = goal.value;
-
-  if (w <= 0 || h <= 0) {
-    dietResult.textContent = "Enter valid height and weight";
-    return;
-  }
-
-  let calories = Math.round(24 * w);
+  let calories = 24 * w;
   if (g === "loss") calories -= 500;
   if (g === "gain") calories += 500;
-
   calories = Math.max(calories, 1200);
-  dietResult.textContent = `Recommended Intake: ${calories} kcal/day`;
-};
+  dietResult.textContent = `Calories/day: ${calories}`;
+}
+
+/* ---------- BMI ---------- */
+function calculateBMI() {
+  const w = Number(weight.value);
+  const h = Number(height.value) / 100;
+  if (w <= 0 || h <= 0) return;
+  const bmi = (w / (h * h)).toFixed(1);
+  let cat = bmi < 18.5 ? "Underweight" : bmi < 25 ? "Normal" : bmi < 30 ? "Overweight" : "Obese";
+  bmiResult.textContent = `BMI: ${bmi} (${cat})`;
+}
+
+/* ---------- WATER ---------- */
+let water = Number(localStorage.getItem("water")) || 0;
+updateWater();
+function addWater(ml) {
+  water += ml;
+  localStorage.setItem("water", water);
+  updateWater();
+}
+function updateWater() {
+  waterResult.textContent = `Today's Intake: ${water} ml`;
+}
+
+/* ---------- WORKOUT ---------- */
+const workouts = JSON.parse(localStorage.getItem("workouts")) || {};
+function saveWorkout() {
+  workouts[workoutDay.value] = workoutPlan.value;
+  localStorage.setItem("workouts", JSON.stringify(workouts));
+  workoutPlan.value = "";
+  renderWorkouts();
+}
+function renderWorkouts() {
+  workoutList.innerHTML = "";
+  Object.entries(workouts).forEach(([d, p]) => {
+    workoutList.innerHTML += `<li>• <b>${d}</b>: ${p}</li>`;
+  });
+}
+renderWorkouts();
 
 /* ---------- THEME ---------- */
 const themeBtn = document.getElementById("themeBtn");
-
 function setTheme(mode) {
   document.body.classList.toggle("dark-bg", mode === "dark");
   document.body.classList.toggle("light-bg", mode === "light");
@@ -184,19 +218,16 @@ function setTheme(mode) {
   themeBtn.textContent = mode === "dark" ? "🌙" : "☀️";
   localStorage.setItem("theme", mode);
 }
-
 themeBtn.onclick = () => {
-  const newTheme = localStorage.getItem("theme") === "dark" ? "light" : "dark";
-  setTheme(newTheme);
+  setTheme(localStorage.getItem("theme") === "dark" ? "light" : "dark");
 };
-
 setTheme(localStorage.getItem("theme") || "dark");
 
 /* ---------- AUTO LOGIN ---------- */
-const savedUser = localStorage.getItem("user");
 const savedRole = localStorage.getItem("role");
-if (savedUser && savedRole) showDashboard(savedRole);
+if (savedRole) showDashboard(savedRole);
 </script>
 
 </body>
 </html>
+
