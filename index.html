@@ -5,262 +5,210 @@
 <title>Fitness Hub – All in One</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Tailwind CDN -->
+<!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
 
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, getDocs, collection }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+window.firebaseModules = { initializeApp, getAuth, signInWithEmailAndPassword, signOut,
+  onAuthStateChanged, getFirestore, doc, getDoc, getDocs, collection };
+</script>
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
-body {
-  transition: background 0.6s ease, color 0.4s ease;
-}
-.dark-bg {
-  background-image: url("https://images.unsplash.com/photo-1554284126-aa88f22d8b74");
-}
-.light-bg {
-  background-image: url("https://images.unsplash.com/photo-1558611848-73f7eb4001a1");
-}
-.bg-cover-fixed {
-  background-size: cover;
-  background-attachment: fixed;
-  background-position: center;
-}
+body { transition: 0.5s; }
+.dark { background:#0f172a; color:white; }
+.light { background:#f8fafc; color:black; }
 </style>
 </head>
 
-<body class="min-h-screen bg-cover-fixed text-white">
+<body class="dark">
 
-<!-- NAVBAR -->
 <nav class="flex justify-between items-center p-4 bg-black/70">
-  <h1 class="text-xl font-bold tracking-wide">Fitness Hub</h1>
-  <div class="flex items-center gap-4">
-    <span id="userLabel" class="font-semibold"></span>
-    <button id="themeBtn" class="text-2xl">🌙</button>
-    <button id="logoutBtn" class="bg-red-500 px-3 py-1 rounded hidden">Logout</button>
-  </div>
+<h1 class="text-xl font-bold">Fitness Hub</h1>
+<div>
+<button onclick="toggleTheme()" class="mr-3">🌙</button>
+<button id="logoutBtn" onclick="logout()" class="hidden bg-red-500 px-3 py-1 rounded">Logout</button>
+</div>
 </nav>
 
 <!-- LOGIN -->
 <section id="loginSection" class="flex justify-center mt-12">
-  <div class="bg-black/70 p-6 rounded w-80 shadow-lg">
-    <h2 class="text-center text-lg mb-4 font-semibold">Login</h2>
-
-    <input id="email" class="w-full p-2 mb-3 text-black rounded" placeholder="Email">
-    <input id="password" type="password" class="w-full p-2 mb-3 text-black rounded" placeholder="Password">
-
-    <select id="role" class="w-full p-2 mb-4 text-black rounded">
-      <option value="user">User</option>
-      <option value="admin">Admin</option>
-    </select>
-
-    <button id="loginBtn" class="bg-blue-500 w-full p-2 rounded hover:bg-blue-600">
-      Login
-    </button>
-  </div>
+<div class="bg-black/70 p-6 rounded w-80">
+<h2 class="text-center mb-4">Login</h2>
+<input id="email" class="w-full p-2 mb-3 text-black rounded" placeholder="Email">
+<input id="password" type="password" class="w-full p-2 mb-3 text-black rounded" placeholder="Password">
+<button onclick="login()" class="bg-blue-500 w-full p-2 rounded">Login</button>
+</div>
 </section>
 
 <!-- USER DASHBOARD -->
-<section id="userDashboard" class="hidden p-6">
-  <h2 class="text-2xl text-center mb-6 font-semibold">User Dashboard</h2>
+<section id="userDashboard" class="hidden p-6 max-w-md mx-auto">
+<h2 class="text-2xl text-center mb-4">User Dashboard</h2>
 
-  <!-- Diet -->
-  <div class="max-w-md mx-auto bg-black/70 p-6 rounded mb-6">
-    <h3 class="text-xl mb-3 text-center">Diet Plan Calculator</h3>
+<input id="weight" type="number" placeholder="Weight (kg)" class="w-full p-2 mb-3 text-black rounded">
+<input id="height" type="number" placeholder="Height (cm)" class="w-full p-2 mb-3 text-black rounded">
 
-    <input id="weight" type="number" placeholder="Weight (kg)" class="w-full p-2 mb-3 text-black rounded">
-    <input id="height" type="number" placeholder="Height (cm)" class="w-full p-2 mb-3 text-black rounded">
+<select id="goal" class="w-full p-2 mb-3 text-black rounded">
+<option value="loss">Weight Loss</option>
+<option value="maintain">Maintain</option>
+<option value="gain">Muscle Gain</option>
+</select>
 
-    <select id="goal" class="w-full p-2 mb-3 text-black rounded">
-      <option value="loss">Weight Loss</option>
-      <option value="maintain">Maintain</option>
-      <option value="gain">Muscle Gain</option>
-    </select>
+<button onclick="calculateDiet()" class="bg-green-500 w-full p-2 rounded">Calculate Diet</button>
 
-    <button id="dietBtn" class="bg-green-500 w-full p-2 rounded hover:bg-green-600">
-      Calculate Diet
-    </button>
+<p id="dietResult" class="mt-3 font-semibold text-center"></p>
 
-    <p id="dietResult" class="mt-3 text-center font-semibold"></p>
-  </div>
+<table id="dietTable" class="w-full mt-4 bg-white text-black hidden">
+<tr><th>Meal</th><th>Food</th><th>Calories</th></tr>
+</table>
 
-  <!-- BMI -->
-  <div class="max-w-md mx-auto bg-black/70 p-6 rounded mb-6">
-    <h3 class="text-xl mb-3 text-center">BMI Calculator</h3>
-
-    <button id="bmiBtn" class="bg-indigo-500 w-full p-2 rounded hover:bg-indigo-600">
-      Calculate BMI
-    </button>
-
-    <p id="bmiResult" class="mt-3 text-center font-semibold"></p>
-  </div>
-
-  <!-- Water -->
-  <div class="max-w-md mx-auto bg-black/70 p-6 rounded mb-6">
-    <h3 class="text-xl mb-3 text-center">Water Intake Tracker</h3>
-
-    <div class="flex justify-center gap-4">
-      <button onclick="addWater(250)" class="bg-blue-500 px-4 py-2 rounded">+250 ml</button>
-      <button onclick="addWater(500)" class="bg-blue-700 px-4 py-2 rounded">+500 ml</button>
-    </div>
-
-    <p id="waterResult" class="mt-3 text-center font-semibold"></p>
-  </div>
-
-  <!-- Workout -->
-  <div class="max-w-md mx-auto bg-black/70 p-6 rounded">
-    <h3 class="text-xl mb-3 text-center">Workout Planner</h3>
-
-    <select id="workoutDay" class="w-full p-2 mb-3 text-black rounded">
-      <option>Monday</option>
-      <option>Tuesday</option>
-      <option>Wednesday</option>
-      <option>Thursday</option>
-      <option>Friday</option>
-      <option>Saturday</option>
-    </select>
-
-    <input id="workoutPlan" class="w-full p-2 mb-3 text-black rounded" placeholder="Workout plan">
-
-    <button id="saveWorkoutBtn" class="bg-purple-500 w-full p-2 rounded hover:bg-purple-600">
-      Save Workout
-    </button>
-
-    <ul id="workoutList" class="mt-4 text-sm space-y-1"></ul>
-  </div>
+<button id="pdfBtn" onclick="downloadPDF()"
+class="bg-orange-500 w-full mt-3 p-2 rounded hidden">
+Download Diet PDF
+</button>
 </section>
 
 <!-- ADMIN DASHBOARD -->
-<section id="adminDashboard" class="hidden p-6">
-  <h2 class="text-3xl mb-6 text-center font-semibold">Admin Dashboard</h2>
+<section id="adminDashboard" class="hidden p-6 max-w-xl mx-auto">
+<h2 class="text-2xl text-center mb-4">Admin Dashboard</h2>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-    <div class="bg-black/70 p-4 rounded">
-      <h3>Total Users</h3>
-      <p class="text-2xl">120</p>
-    </div>
-    <div class="bg-black/70 p-4 rounded">
-      <h3>Active Plans</h3>
-      <p class="text-2xl">45</p>
-    </div>
-    <div class="bg-black/70 p-4 rounded">
-      <h3>Calculations</h3>
-      <p class="text-2xl">300+</p>
-    </div>
-  </div>
-
-  <div class="bg-black/70 p-6 rounded">
-    <h3 class="text-xl mb-4 text-center">Recent Activity</h3>
-    <ul class="text-sm space-y-2">
-      <li>• User logged in</li>
-      <li>• Diet calculated</li>
-      <li>• Water updated</li>
-      <li>• Workout saved</li>
-    </ul>
-  </div>
+<table class="w-full bg-black/60 text-sm">
+<thead>
+<tr><th>Email</th><th>Role</th></tr>
+</thead>
+<tbody id="userTable"></tbody>
+</table>
 </section>
 
-<script>
-/* ---------- ELEMENTS ---------- */
-const loginSection = document.getElementById("loginSection");
-const userDashboard = document.getElementById("userDashboard");
-const adminDashboard = document.getElementById("adminDashboard");
-const logoutBtn = document.getElementById("logoutBtn");
-const userLabel = document.getElementById("userLabel");
+<script type="module">
+const { initializeApp, getAuth, signInWithEmailAndPassword, signOut,
+onAuthStateChanged, getFirestore, doc, getDoc, getDocs, collection } = window.firebaseModules;
 
-/* ---------- LOGIN ---------- */
-document.getElementById("loginBtn").onclick = () => {
-  const role = document.getElementById("role").value;
-  localStorage.setItem("role", role);
-  showDashboard(role);
+/* 🔥 REPLACE WITH YOUR FIREBASE CONFIG */
+const firebaseConfig = {
+apiKey: "YOUR_API_KEY",
+authDomain: "YOUR_PROJECT.firebaseapp.com",
+projectId: "YOUR_PROJECT_ID",
 };
 
-function showDashboard(role) {
-  loginSection.classList.add("hidden");
-  userDashboard.classList.add("hidden");
-  adminDashboard.classList.add("hidden");
-  logoutBtn.classList.remove("hidden");
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-  userLabel.textContent = role.toUpperCase();
+/* LOGIN */
+window.login = async function() {
+try {
+const email = emailInput.value;
+const pass = password.value;
 
-  role === "admin"
-    ? adminDashboard.classList.remove("hidden")
-    : userDashboard.classList.remove("hidden");
+const cred = await signInWithEmailAndPassword(auth, email, pass);
+const uid = cred.user.uid;
+
+const snap = await getDoc(doc(db,"users",uid));
+if(!snap.exists()) return alert("No role assigned");
+
+showDashboard(snap.data().role);
+}
+catch(e){ alert(e.message); }
 }
 
-logoutBtn.onclick = () => {
-  localStorage.clear();
-  location.reload();
-};
-
-/* ---------- DIET ---------- */
-document.getElementById("dietBtn").onclick = () => {
-  const w = Number(weight.value);
-  if (w <= 0) return alert("Enter valid weight");
-
-  let calories = w * 24;
-  if (goal.value === "loss") calories -= 500;
-  if (goal.value === "gain") calories += 500;
-
-  dietResult.textContent = `Recommended Calories: ${Math.max(calories,1200)} kcal/day`;
-};
-
-/* ---------- BMI ---------- */
-document.getElementById("bmiBtn").onclick = () => {
-  const w = Number(weight.value);
-  const h = Number(height.value) / 100;
-  if (w <= 0 || h <= 0) return alert("Enter valid height and weight");
-
-  const bmi = (w / (h * h)).toFixed(1);
-  const status =
-    bmi < 18.5 ? "Underweight" :
-    bmi < 25 ? "Normal" :
-    bmi < 30 ? "Overweight" : "Obese";
-
-  bmiResult.textContent = `BMI: ${bmi} (${status})`;
-};
-
-/* ---------- WATER ---------- */
-let water = Number(localStorage.getItem("water")) || 0;
-function addWater(ml) {
-  water += ml;
-  localStorage.setItem("water", water);
-  waterResult.textContent = `Today's Intake: ${water} ml`;
+/* LOGOUT */
+window.logout = async function(){
+await signOut(auth);
+location.reload();
 }
-addWater(0);
 
-/* ---------- WORKOUT ---------- */
-const workouts = JSON.parse(localStorage.getItem("workouts")) || {};
-document.getElementById("saveWorkoutBtn").onclick = () => {
-  workouts[workoutDay.value] = workoutPlan.value;
-  localStorage.setItem("workouts", JSON.stringify(workouts));
-  workoutPlan.value = "";
-  renderWorkouts();
-};
-
-function renderWorkouts() {
-  workoutList.innerHTML = "";
-  for (const day in workouts) {
-    workoutList.innerHTML += `<li>• <b>${day}</b>: ${workouts[day]}</li>`;
-  }
+/* AUTH STATE */
+onAuthStateChanged(auth, async user=>{
+if(user){
+const snap = await getDoc(doc(db,"users",user.uid));
+if(snap.exists()) showDashboard(snap.data().role);
 }
-renderWorkouts();
+});
 
-/* ---------- THEME ---------- */
-const themeBtn = document.getElementById("themeBtn");
-function setTheme(mode) {
-  document.body.classList.toggle("dark-bg", mode === "dark");
-  document.body.classList.toggle("light-bg", mode === "light");
-  document.body.classList.toggle("text-white", mode === "dark");
-  document.body.classList.toggle("text-black", mode === "light");
-  themeBtn.textContent = mode === "dark" ? "🌙" : "☀️";
-  localStorage.setItem("theme", mode);
+/* DASHBOARD */
+function showDashboard(role){
+loginSection.classList.add("hidden");
+logoutBtn.classList.remove("hidden");
+
+if(role==="admin"){
+adminDashboard.classList.remove("hidden");
+loadUsers();
+}else{
+userDashboard.classList.remove("hidden");
 }
-themeBtn.onclick = () =>
-  setTheme(localStorage.getItem("theme") === "dark" ? "light" : "dark");
+}
 
-setTheme(localStorage.getItem("theme") || "dark");
+/* ADMIN USERS */
+async function loadUsers(){
+const q = await getDocs(collection(db,"users"));
+userTable.innerHTML="";
+q.forEach(d=>{
+userTable.innerHTML+=`<tr><td>${d.data().email}</td><td>${d.data().role}</td></tr>`;
+});
+}
 
-/* ---------- AUTO LOGIN ---------- */
-const savedRole = localStorage.getItem("role");
-if (savedRole) showDashboard(savedRole);
+/* DIET */
+let lastCalories=0;
+window.calculateDiet = function(){
+const w = Number(weight.value);
+if(w<=0) return alert("Invalid weight");
+
+let cal = w*24;
+if(goal.value==="loss") cal-=500;
+if(goal.value==="gain") cal+=500;
+cal=Math.max(cal,1200);
+
+dietResult.textContent=`Calories/day: ${cal}`;
+lastCalories=cal;
+generateDiet(cal);
+}
+
+/* DIET TABLE */
+function generateDiet(cal){
+const meals=[
+["Breakfast","Oats + Fruit",0.3],
+["Lunch","Rice + Dal",0.35],
+["Snack","Nuts",0.15],
+["Dinner","Roti + Veg",0.2]
+];
+
+dietTable.innerHTML="<tr><th>Meal</th><th>Food</th><th>Calories</th></tr>";
+meals.forEach(m=>{
+dietTable.innerHTML+=`
+<tr><td>${m[0]}</td><td>${m[1]}</td><td>${Math.round(cal*m[2])}</td></tr>`;
+});
+dietTable.classList.remove("hidden");
+pdfBtn.classList.remove("hidden");
+}
+
+/* PDF */
+window.downloadPDF = function(){
+const { jsPDF } = window.jspdf;
+const pdf = new jsPDF();
+pdf.text("Personalized Diet Plan",20,20);
+let y=40;
+[...dietTable.rows].forEach(r=>{
+pdf.text([...r.cells].map(c=>c.innerText).join(" | "),20,y);
+y+=10;
+});
+pdf.save("Diet_Plan.pdf");
+}
+
+/* THEME */
+window.toggleTheme=function(){
+document.body.classList.toggle("dark");
+document.body.classList.toggle("light");
+}
 </script>
 
 </body>
