@@ -21,6 +21,7 @@ body {
 .bg-cover-fixed {
   background-size: cover;
   background-attachment: fixed;
+  background-position: center;
 }
 </style>
 </head>
@@ -29,9 +30,9 @@ body {
 
 <!-- NAVBAR -->
 <nav class="flex justify-between items-center p-4 bg-black/70">
-  <h1 class="text-xl font-bold">Fitness Hub</h1>
+  <h1 class="text-xl font-bold tracking-wide">Fitness Hub</h1>
   <div class="flex items-center gap-4">
-    <span id="userLabel"></span>
+    <span id="userLabel" class="font-semibold"></span>
     <button id="themeBtn" class="text-2xl">🌙</button>
     <button id="logoutBtn" class="bg-red-500 px-3 py-1 rounded hidden">Logout</button>
   </div>
@@ -39,195 +40,5 @@ body {
 
 <!-- LOGIN -->
 <section id="loginSection" class="flex justify-center mt-12">
-  <div class="bg-black/70 p-6 rounded w-80">
-    <h2 class="text-center text-lg mb-4">Login</h2>
-    <input id="email" class="w-full p-2 mb-3 text-black rounded" placeholder="Email">
-    <input id="password" type="password" class="w-full p-2 mb-3 text-black rounded" placeholder="Password">
-    <select id="role" class="w-full p-2 mb-3 text-black rounded">
-      <option value="user">User</option>
-      <option value="admin">Admin</option>
-    </select>
-    <button onclick="login()" class="bg-blue-500 w-full p-2 rounded">Login</button>
-  </div>
-</section>
-
-<!-- USER DASHBOARD -->
-<section id="userDashboard" class="hidden p-6">
-  <h2 class="text-2xl text-center mb-6">User Dashboard</h2>
-
-  <!-- Diet -->
-  <div class="max-w-md mx-auto bg-black/70 p-6 rounded mb-6">
-    <h3 class="text-xl mb-3 text-center">Diet Plan Calculator</h3>
-    <input id="weight" type="number" placeholder="Weight (kg)" class="w-full p-2 mb-3 text-black rounded">
-    <input id="height" type="number" placeholder="Height (cm)" class="w-full p-2 mb-3 text-black rounded">
-    <select id="goal" class="w-full p-2 mb-3 text-black rounded">
-      <option value="loss">Weight Loss</option>
-      <option value="maintain">Maintain</option>
-      <option value="gain">Muscle Gain</option>
-    </select>
-    <button onclick="calculateDiet()" class="bg-green-500 w-full p-2 rounded">Calculate</button>
-    <p id="dietResult" class="mt-3 text-center font-semibold"></p>
-  </div>
-
-  <!-- BMI -->
-  <div class="max-w-md mx-auto bg-black/70 p-6 rounded mb-6">
-    <h3 class="text-xl mb-3 text-center">BMI Calculator</h3>
-    <button onclick="calculateBMI()" class="bg-indigo-500 w-full p-2 rounded">
-      Calculate BMI
-    </button>
-    <p id="bmiResult" class="mt-3 text-center font-semibold"></p>
-  </div>
-
-  <!-- Water -->
-  <div class="max-w-md mx-auto bg-black/70 p-6 rounded mb-6">
-    <h3 class="text-xl mb-3 text-center">Water Intake</h3>
-    <div class="flex justify-center gap-4">
-      <button onclick="addWater(250)" class="bg-blue-500 px-4 py-2 rounded">+250ml</button>
-      <button onclick="addWater(500)" class="bg-blue-700 px-4 py-2 rounded">+500ml</button>
-    </div>
-    <p id="waterResult" class="mt-3 text-center font-semibold"></p>
-  </div>
-
-  <!-- Workout -->
-  <div class="max-w-md mx-auto bg-black/70 p-6 rounded">
-    <h3 class="text-xl mb-3 text-center">Workout Planner</h3>
-    <select id="workoutDay" class="w-full p-2 mb-3 text-black rounded">
-      <option>Monday</option>
-      <option>Tuesday</option>
-      <option>Wednesday</option>
-      <option>Thursday</option>
-      <option>Friday</option>
-      <option>Saturday</option>
-    </select>
-    <input id="workoutPlan" class="w-full p-2 mb-3 text-black rounded" placeholder="Workout plan">
-    <button onclick="saveWorkout()" class="bg-purple-500 w-full p-2 rounded">Save</button>
-    <ul id="workoutList" class="mt-4 text-sm"></ul>
-  </div>
-</section>
-
-<!-- ADMIN DASHBOARD -->
-<section id="adminDashboard" class="hidden p-6">
-  <h2 class="text-3xl mb-6 text-center">Admin Dashboard</h2>
-
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-    <div class="bg-black/70 p-4 rounded">
-      <h3>Total Users</h3>
-      <p class="text-2xl">120</p>
-    </div>
-    <div class="bg-black/70 p-4 rounded">
-      <h3>Active Plans</h3>
-      <p class="text-2xl">45</p>
-    </div>
-    <div class="bg-black/70 p-4 rounded">
-      <h3>Calculations</h3>
-      <p class="text-2xl">300+</p>
-    </div>
-  </div>
-
-  <div class="bg-black/70 p-6 rounded">
-    <h3 class="text-xl mb-4 text-center">Recent Activity</h3>
-    <ul class="text-sm space-y-2">
-      <li>• User logged in</li>
-      <li>• Diet calculated</li>
-      <li>• Water updated</li>
-      <li>• Workout saved</li>
-    </ul>
-  </div>
-</section>
-
-<script>
-/* ---------- LOGIN (SIMULATED) ---------- */
-function login() {
-  const role = document.getElementById("role").value;
-  localStorage.setItem("role", role);
-  showDashboard(role);
-}
-
-function showDashboard(role) {
-  loginSection.classList.add("hidden");
-  userDashboard.classList.add("hidden");
-  adminDashboard.classList.add("hidden");
-  logoutBtn.classList.remove("hidden");
-  userLabel.textContent = role.toUpperCase();
-  role === "admin"
-    ? adminDashboard.classList.remove("hidden")
-    : userDashboard.classList.remove("hidden");
-}
-
-logoutBtn.onclick = () => {
-  localStorage.clear();
-  location.reload();
-};
-
-/* ---------- DIET ---------- */
-function calculateDiet() {
-  const w = Number(weight.value);
-  const g = goal.value;
-  let calories = 24 * w;
-  if (g === "loss") calories -= 500;
-  if (g === "gain") calories += 500;
-  calories = Math.max(calories, 1200);
-  dietResult.textContent = `Calories/day: ${calories}`;
-}
-
-/* ---------- BMI ---------- */
-function calculateBMI() {
-  const w = Number(weight.value);
-  const h = Number(height.value) / 100;
-  if (w <= 0 || h <= 0) return;
-  const bmi = (w / (h * h)).toFixed(1);
-  let cat = bmi < 18.5 ? "Underweight" : bmi < 25 ? "Normal" : bmi < 30 ? "Overweight" : "Obese";
-  bmiResult.textContent = `BMI: ${bmi} (${cat})`;
-}
-
-/* ---------- WATER ---------- */
-let water = Number(localStorage.getItem("water")) || 0;
-updateWater();
-function addWater(ml) {
-  water += ml;
-  localStorage.setItem("water", water);
-  updateWater();
-}
-function updateWater() {
-  waterResult.textContent = `Today's Intake: ${water} ml`;
-}
-
-/* ---------- WORKOUT ---------- */
-const workouts = JSON.parse(localStorage.getItem("workouts")) || {};
-function saveWorkout() {
-  workouts[workoutDay.value] = workoutPlan.value;
-  localStorage.setItem("workouts", JSON.stringify(workouts));
-  workoutPlan.value = "";
-  renderWorkouts();
-}
-function renderWorkouts() {
-  workoutList.innerHTML = "";
-  Object.entries(workouts).forEach(([d, p]) => {
-    workoutList.innerHTML += `<li>• <b>${d}</b>: ${p}</li>`;
-  });
-}
-renderWorkouts();
-
-/* ---------- THEME ---------- */
-const themeBtn = document.getElementById("themeBtn");
-function setTheme(mode) {
-  document.body.classList.toggle("dark-bg", mode === "dark");
-  document.body.classList.toggle("light-bg", mode === "light");
-  document.body.classList.toggle("text-white", mode === "dark");
-  document.body.classList.toggle("text-black", mode === "light");
-  themeBtn.textContent = mode === "dark" ? "🌙" : "☀️";
-  localStorage.setItem("theme", mode);
-}
-themeBtn.onclick = () => {
-  setTheme(localStorage.getItem("theme") === "dark" ? "light" : "dark");
-};
-setTheme(localStorage.getItem("theme") || "dark");
-
-/* ---------- AUTO LOGIN ---------- */
-const savedRole = localStorage.getItem("role");
-if (savedRole) showDashboard(savedRole);
-</script>
-
-</body>
-</html>
-
+  <div class="bg-black/70 p-6 rounded w-80 shadow-lg">
+    <h2 class="text-center text-lg mb-4 font-semibold">Login</h2>
