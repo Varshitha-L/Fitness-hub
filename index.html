@@ -8,42 +8,37 @@
 <!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- Firebase -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, getDocs, collection }
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-window.firebaseModules = { initializeApp, getAuth, signInWithEmailAndPassword, signOut,
-  onAuthStateChanged, getFirestore, doc, getDoc, getDocs, collection };
-</script>
-
 <!-- jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-body { transition: 0.5s; }
+body {
+  transition: background 0.4s ease, color 0.4s ease;
+}
 .dark { background:#0f172a; color:white; }
 .light { background:#f8fafc; color:black; }
+.card {
+  background: rgba(0,0,0,0.6);
+  border-radius: 12px;
+}
 </style>
 </head>
 
 <body class="dark">
 
+<!-- NAVBAR -->
 <nav class="flex justify-between items-center p-4 bg-black/70">
 <h1 class="text-xl font-bold">Fitness Hub</h1>
 <div>
-<button onclick="toggleTheme()" class="mr-3">🌙</button>
+<button onclick="toggleTheme()" class="mr-3 px-3 py-1 border rounded">Theme</button>
 <button id="logoutBtn" onclick="logout()" class="hidden bg-red-500 px-3 py-1 rounded">Logout</button>
 </div>
 </nav>
 
 <!-- LOGIN -->
 <section id="loginSection" class="flex justify-center mt-12">
-<div class="bg-black/70 p-6 rounded w-80">
-<h2 class="text-center mb-4">Login</h2>
+<div class="card p-6 w-80">
+<h2 class="text-center mb-4 text-lg">User Login</h2>
 <input id="email" class="w-full p-2 mb-3 text-black rounded" placeholder="Email">
 <input id="password" type="password" class="w-full p-2 mb-3 text-black rounded" placeholder="Password">
 <button onclick="login()" class="bg-blue-500 w-full p-2 rounded">Login</button>
@@ -54,8 +49,11 @@ body { transition: 0.5s; }
 <section id="userDashboard" class="hidden p-6 max-w-md mx-auto">
 <h2 class="text-2xl text-center mb-4">User Dashboard</h2>
 
-<input id="weight" type="number" placeholder="Weight (kg)" class="w-full p-2 mb-3 text-black rounded">
-<input id="height" type="number" placeholder="Height (cm)" class="w-full p-2 mb-3 text-black rounded">
+<input id="weight" type="number" placeholder="Weight (kg)"
+class="w-full p-2 mb-3 text-black rounded">
+
+<input id="height" type="number" placeholder="Height (cm)"
+class="w-full p-2 mb-3 text-black rounded">
 
 <select id="goal" class="w-full p-2 mb-3 text-black rounded">
 <option value="loss">Weight Loss</option>
@@ -63,12 +61,19 @@ body { transition: 0.5s; }
 <option value="gain">Muscle Gain</option>
 </select>
 
-<button onclick="calculateDiet()" class="bg-green-500 w-full p-2 rounded">Calculate Diet</button>
+<button onclick="calculateDiet()" class="bg-green-500 w-full p-2 rounded">
+Calculate Diet
+</button>
 
 <p id="dietResult" class="mt-3 font-semibold text-center"></p>
+<p id="bmiResult" class="text-center mt-1"></p>
 
 <table id="dietTable" class="w-full mt-4 bg-white text-black hidden">
-<tr><th>Meal</th><th>Food</th><th>Calories</th></tr>
+<tr class="bg-gray-200">
+<th class="p-2">Meal</th>
+<th class="p-2">Food</th>
+<th class="p-2">Calories</th>
+</tr>
 </table>
 
 <button id="pdfBtn" onclick="downloadPDF()"
@@ -81,23 +86,30 @@ Download Diet PDF
 <section id="adminDashboard" class="hidden p-6 max-w-xl mx-auto">
 <h2 class="text-2xl text-center mb-4">Admin Dashboard</h2>
 
-<table class="w-full bg-black/60 text-sm">
-<thead>
-<tr><th>Email</th><th>Role</th></tr>
+<table class="w-full bg-black/60 text-sm border">
+<thead class="bg-black">
+<tr>
+<th class="p-2 border">Email</th>
+<th class="p-2 border">Role</th>
+</tr>
 </thead>
 <tbody id="userTable"></tbody>
 </table>
 </section>
 
+<!-- FIREBASE -->
 <script type="module">
-const { initializeApp, getAuth, signInWithEmailAndPassword, signOut,
-onAuthStateChanged, getFirestore, doc, getDoc, getDocs, collection } = window.firebaseModules;
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, getDocs, collection }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* 🔥 REPLACE WITH YOUR FIREBASE CONFIG */
+/* 🔥 CONFIG */
 const firebaseConfig = {
-apiKey: "YOUR_API_KEY",
-authDomain: "YOUR_PROJECT.firebaseapp.com",
-projectId: "YOUR_PROJECT_ID",
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -105,110 +117,120 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 /* LOGIN */
-window.login = async function() {
-try {
-const email = emailInput.value;
-const pass = password.value;
-
-const cred = await signInWithEmailAndPassword(auth, email, pass);
-const uid = cred.user.uid;
-
-const snap = await getDoc(doc(db,"users",uid));
-if(!snap.exists()) return alert("No role assigned");
-
-showDashboard(snap.data().role);
-}
-catch(e){ alert(e.message); }
-}
+window.login = async () => {
+  try {
+    const cred = await signInWithEmailAndPassword(
+      auth, email.value, password.value
+    );
+    const snap = await getDoc(doc(db,"users",cred.user.uid));
+    showDashboard(snap.data().role);
+  } catch (e) { alert(e.message); }
+};
 
 /* LOGOUT */
-window.logout = async function(){
-await signOut(auth);
-location.reload();
-}
+window.logout = async () => {
+  await signOut(auth);
+  location.reload();
+};
 
-/* AUTH STATE */
-onAuthStateChanged(auth, async user=>{
-if(user){
-const snap = await getDoc(doc(db,"users",user.uid));
-if(snap.exists()) showDashboard(snap.data().role);
-}
+/* AUTH CHECK */
+onAuthStateChanged(auth, async user => {
+  if(user){
+    const snap = await getDoc(doc(db,"users",user.uid));
+    showDashboard(snap.data().role);
+  }
 });
 
-/* DASHBOARD */
+/* DASHBOARD CONTROL */
 function showDashboard(role){
-loginSection.classList.add("hidden");
-logoutBtn.classList.remove("hidden");
-
-if(role==="admin"){
-adminDashboard.classList.remove("hidden");
-loadUsers();
-}else{
-userDashboard.classList.remove("hidden");
-}
+  loginSection.classList.add("hidden");
+  logoutBtn.classList.remove("hidden");
+  role === "admin"
+    ? (adminDashboard.classList.remove("hidden"), loadUsers())
+    : userDashboard.classList.remove("hidden");
 }
 
 /* ADMIN USERS */
 async function loadUsers(){
-const q = await getDocs(collection(db,"users"));
-userTable.innerHTML="";
-q.forEach(d=>{
-userTable.innerHTML+=`<tr><td>${d.data().email}</td><td>${d.data().role}</td></tr>`;
-});
+  const q = await getDocs(collection(db,"users"));
+  userTable.innerHTML="";
+  q.forEach(d=>{
+    userTable.innerHTML += `
+      <tr>
+        <td class="border p-2">${d.data().email}</td>
+        <td class="border p-2">${d.data().role}</td>
+      </tr>`;
+  });
 }
 
-/* DIET */
-let lastCalories=0;
-window.calculateDiet = function(){
-const w = Number(weight.value);
-if(w<=0) return alert("Invalid weight");
+/* DIET + BMI */
+window.calculateDiet = () => {
+  const w = +weight.value;
+  const h = +height.value / 100;
+  if(w<=0 || h<=0) return alert("Invalid inputs");
 
-let cal = w*24;
-if(goal.value==="loss") cal-=500;
-if(goal.value==="gain") cal+=500;
-cal=Math.max(cal,1200);
+  const bmi = (w / (h*h)).toFixed(1);
+  let cal = w * 24;
+  if(goal.value==="loss") cal -= 500;
+  if(goal.value==="gain") cal += 500;
+  cal = Math.max(cal,1200);
 
-dietResult.textContent=`Calories/day: ${cal}`;
-lastCalories=cal;
-generateDiet(cal);
-}
+  dietResult.textContent = `Calories/day: ${cal}`;
+  bmiResult.textContent = `BMI: ${bmi}`;
+  generateDiet(cal);
+};
 
 /* DIET TABLE */
 function generateDiet(cal){
-const meals=[
-["Breakfast","Oats + Fruit",0.3],
-["Lunch","Rice + Dal",0.35],
-["Snack","Nuts",0.15],
-["Dinner","Roti + Veg",0.2]
-];
-
-dietTable.innerHTML="<tr><th>Meal</th><th>Food</th><th>Calories</th></tr>";
-meals.forEach(m=>{
-dietTable.innerHTML+=`
-<tr><td>${m[0]}</td><td>${m[1]}</td><td>${Math.round(cal*m[2])}</td></tr>`;
-});
-dietTable.classList.remove("hidden");
-pdfBtn.classList.remove("hidden");
+  const meals = [
+    ["Breakfast","Oats + Fruit",0.3],
+    ["Lunch","Rice + Dal",0.35],
+    ["Snack","Nuts",0.15],
+    ["Dinner","Roti + Veg",0.2]
+  ];
+  dietTable.innerHTML = `
+  <tr class="bg-gray-200">
+  <th class="p-2">Meal</th>
+  <th class="p-2">Food</th>
+  <th class="p-2">Calories</th>
+  </tr>`;
+  meals.forEach(m=>{
+    dietTable.innerHTML += `
+    <tr>
+      <td class="p-2">${m[0]}</td>
+      <td class="p-2">${m[1]}</td>
+      <td class="p-2">${Math.round(cal*m[2])}</td>
+    </tr>`;
+  });
+  dietTable.classList.remove("hidden");
+  pdfBtn.classList.remove("hidden");
 }
 
 /* PDF */
-window.downloadPDF = function(){
-const { jsPDF } = window.jspdf;
-const pdf = new jsPDF();
-pdf.text("Personalized Diet Plan",20,20);
-let y=40;
-[...dietTable.rows].forEach(r=>{
-pdf.text([...r.cells].map(c=>c.innerText).join(" | "),20,y);
-y+=10;
-});
-pdf.save("Diet_Plan.pdf");
-}
+window.downloadPDF = () => {
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF();
+  pdf.text("Personalized Diet Plan",20,20);
+  let y=40;
+  [...dietTable.rows].forEach(r=>{
+    pdf.text([...r.cells].map(c=>c.innerText).join(" | "),20,y);
+    y+=10;
+  });
+  pdf.save("Diet_Plan.pdf");
+};
 
 /* THEME */
-window.toggleTheme=function(){
-document.body.classList.toggle("dark");
-document.body.classList.toggle("light");
+function applyTheme(t){
+  document.body.className = t;
+  localStorage.setItem("theme",t);
 }
+window.toggleTheme = () =>
+  applyTheme(document.body.classList.contains("dark")?"light":"dark");
+
+applyTheme(
+  localStorage.getItem("theme") ||
+  (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")
+);
 </script>
 
 </body>
