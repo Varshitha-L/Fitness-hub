@@ -1,16 +1,18 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Fitness Hub – Advanced</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
-body{transition:.4s}
-.dark{background:#0f172a;color:#fff}
-.light{background:#f8fafc;color:#000}
-.card{background:rgba(0,0,0,.6);border-radius:12px}
+body { transition: 0.4s; }
+.dark { background:#0f172a; color:#fff }
+.light { background:#f8fafc; color:#000 }
+.card { background:rgba(0,0,0,.6); border-radius:12px }
 </style>
 </head>
 
@@ -28,22 +30,21 @@ body{transition:.4s}
 <!-- LOGIN -->
 <section id="loginSection" class="flex justify-center mt-12">
 <div class="card p-6 w-80">
-<h2 class="text-center mb-4">Login</h2>
+<h2 class="text-center mb-4 text-lg">Login</h2>
 <input id="email" class="w-full p-2 mb-3 text-black rounded" placeholder="Email">
 <input id="password" type="password" class="w-full p-2 mb-3 text-black rounded" placeholder="Password">
 <button onclick="login()" class="bg-blue-500 w-full p-2 rounded">Login</button>
 </div>
 </section>
 
-<!-- USER DASHBOARD -->
+<!-- DASHBOARD -->
 <section id="userDashboard" class="hidden p-6 max-w-lg mx-auto">
 
 <h2 class="text-2xl text-center mb-4">Health Dashboard</h2>
 
-<!-- HEALTH SUMMARY -->
 <div id="healthSummary" class="bg-black/60 p-4 rounded mb-4 text-center"></div>
 
-<!-- BMI + DIET -->
+<!-- BMI -->
 <input id="weight" type="number" placeholder="Weight (kg)" class="w-full p-2 mb-2 text-black rounded">
 <input id="height" type="number" placeholder="Height (cm)" class="w-full p-2 mb-2 text-black rounded">
 
@@ -52,15 +53,20 @@ body{transition:.4s}
 <option value="maintain">Maintain</option>
 <option value="gain">Muscle Gain</option>
 </select>
+
 <button onclick="calculateDiet()" class="bg-green-500 w-full p-2 rounded">Analyze Health</button>
 
-<p id="dietResult" class="text-center mt-2 font-semibold"></p>
-<p id="bmiResult" class="text-center"></p>
+<p id="bmiResult" class="text-center mt-2"></p>
+<p id="dietResult" class="text-center font-semibold"></p>
+
+<button onclick="downloadPDF()" class="bg-yellow-500 w-full p-2 mt-3 rounded">
+Download Health Report (PDF)
+</button>
 
 <hr class="my-6">
 
 <!-- WATER -->
-<h3 class="text-lg text-center mb-2">💧 Water Intake</h3>
+<h3 class="text-lg text-center mb-2">Water Intake</h3>
 <div class="bg-black/60 p-4 rounded text-center">
 <button onclick="addWater(250)" class="bg-blue-500 px-4 py-2 rounded">+250ml</button>
 <button onclick="addWater(500)" class="bg-blue-600 px-4 py-2 rounded ml-2">+500ml</button>
@@ -72,8 +78,8 @@ body{transition:.4s}
 
 <hr class="my-6">
 
-<!-- WEEKLY WORKOUT -->
-<h3 class="text-lg text-center mb-2">🏋️ Weekly Workout Plan</h3>
+<!-- WORKOUT -->
+<h3 class="text-lg text-center mb-2">Weekly Workout Plan</h3>
 <button onclick="generateWeeklyWorkout()" class="bg-purple-500 w-full p-2 rounded">
 Generate Weekly Plan
 </button>
@@ -85,8 +91,6 @@ Generate Weekly Plan
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc }
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig={
  apiKey:"YOUR_API_KEY",
@@ -96,11 +100,10 @@ const firebaseConfig={
 
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
-const db=getFirestore(app);
 
 /* AUTH */
 window.login=async()=>{
- const c=await signInWithEmailAndPassword(auth,email.value,password.value);
+ await signInWithEmailAndPassword(auth,email.value,password.value);
  showDashboard();
 }
 window.logout=async()=>{await signOut(auth);location.reload();}
@@ -111,48 +114,61 @@ function showDashboard(){
  logoutBtn.classList.remove("hidden");
 }
 
-/* BMI + HEALTH */
+/* BMI + DIET */
 window.calculateDiet=()=>{
  const w=+weight.value,h=+height.value/100;
- if(w<=0||h<=0)return alert("Invalid input");
+ if(w<=0||h<=0) return alert("Invalid input");
+
  const bmi=(w/(h*h)).toFixed(1);
  let category=bmi<18.5?"Underweight":bmi<25?"Normal":bmi<30?"Overweight":"Obese";
+
+ let calories=w*24;
+ if(goal.value==="loss") calories-=400;
+ if(goal.value==="gain") calories+=400;
+ calories=Math.max(calories,1200);
+
  bmiResult.textContent=`BMI: ${bmi} (${category})`;
- dietResult.textContent=`Recommended calories: ${Math.max(1200,w*24)} kcal`;
- healthSummary.innerHTML=`<b>Health Status:</b> ${category}<br>Stay hydrated and follow workout plan.`;
+ dietResult.textContent=`Recommended Calories: ${Math.round(calories)} kcal/day`;
+
+ healthSummary.innerHTML=
+ `<b>Status:</b> ${category}<br>
+  Goal: ${goal.value.toUpperCase()}<br>
+  Maintain hydration and follow workouts.`;
+
+ localStorage.setItem("healthData",JSON.stringify({bmi,category,calories}));
 }
 
-/* WATER – DATE BASED */
+/* WATER */
 const today=new Date().toDateString();
-let waterData=JSON.parse(localStorage.getItem("waterData")||"{}");
-waterData[today]=waterData[today]||0;
+let water=JSON.parse(localStorage.getItem("water")||"{}");
+water[today]=water[today]||0;
 const GOAL=3000;
 
 window.addWater=a=>{
- waterData[today]+=a;
- localStorage.setItem("waterData",JSON.stringify(waterData));
+ water[today]+=a;
+ localStorage.setItem("water",JSON.stringify(water));
  updateWater();
 }
 function updateWater(){
- const p=Math.min(waterData[today]/GOAL*100,100);
+ const p=Math.min(water[today]/GOAL*100,100);
  waterBar.style.width=p+"%";
- waterStatus.textContent=`${waterData[today]} ml / 3000 ml`;
+ waterStatus.textContent=`${water[today]} / 3000 ml`;
 }
 updateWater();
 
-/* WEEKLY WORKOUT */
+/* WORKOUT */
 window.generateWeeklyWorkout=()=>{
- const days=[
-  "Monday – Cardio",
-  "Tuesday – Upper Body",
-  "Wednesday – Lower Body",
-  "Thursday – Core",
-  "Friday – Full Body",
-  "Saturday – Yoga",
-  "Sunday – Rest Day"
+ const base=[
+ "Monday – Cardio",
+ "Tuesday – Upper Body",
+ "Wednesday – Lower Body",
+ "Thursday – Core",
+ "Friday – Full Body",
+ "Saturday – Yoga",
+ "Sunday – Rest"
  ];
  workoutList.innerHTML="";
- days.forEach(d=>{
+ base.forEach(d=>{
   workoutList.innerHTML+=`
   <li class="bg-black/60 p-3 rounded">
    <input type="checkbox"> ${d}
@@ -160,13 +176,30 @@ window.generateWeeklyWorkout=()=>{
  });
 }
 
+/* PDF */
+window.downloadPDF=()=>{
+ const { jsPDF }=window.jspdf;
+ const pdf=new jsPDF();
+ const d=JSON.parse(localStorage.getItem("healthData"));
+ if(!d) return alert("Analyze health first");
+
+ pdf.text("Fitness Hub Health Report",20,20);
+ pdf.text(`BMI: ${d.bmi} (${d.category})`,20,35);
+ pdf.text(`Calories: ${d.calories} kcal/day`,20,45);
+ pdf.text("Stay consistent and hydrated.",20,60);
+ pdf.save("health-report.pdf");
+}
+
 /* THEME */
-function applyTheme(t){document.body.className=t;localStorage.setItem("theme",t)}
-window.toggleTheme=()=>applyTheme(document.body.classList.contains("dark")?"light":"dark");
+function applyTheme(t){
+ document.body.className=t;
+ localStorage.setItem("theme",t);
+}
+window.toggleTheme=()=>applyTheme(
+ document.body.classList.contains("dark")?"light":"dark"
+);
 applyTheme(localStorage.getItem("theme")||"dark");
 </script>
 
 </body>
 </html>
-
-
