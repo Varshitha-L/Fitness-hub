@@ -9,9 +9,6 @@ function calculateHealth() {
         alert("Please fill all fields");
         return;
     }
-
-
-
     let heightM = height / 100;
     let bmi = (weight / (heightM * heightM)).toFixed(2);
 
@@ -51,4 +48,5 @@ function calculateHealth() {
         <small>This is general guidance, not medical advice.</small>
     `;
 }
+
 
