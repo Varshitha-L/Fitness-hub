@@ -4,7 +4,6 @@ function calculateHealth() {
     let age = document.getElementById("age").value;
     let gender = document.getElementById("gender").value;
     let activity = document.getElementById("activity").value;
-
     if (!height || !weight || !age) {
         alert("Please fill all fields");
         return;
@@ -48,5 +47,6 @@ function calculateHealth() {
         <small>This is general guidance, not medical advice.</small>
     `;
 }
+
 
 
