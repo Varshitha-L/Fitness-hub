@@ -12,7 +12,6 @@ function calculateHealth() {
     let bmi = (weight / (heightM * heightM)).toFixed(2);
     let category = "";
     let diet = "";
-
     if (bmi < 18.5) {
         category = "Underweight";
         diet = "High-calorie diet with proteins, nuts, milk, rice.";
@@ -46,6 +45,7 @@ function calculateHealth() {
         <small>This is general guidance, not medical advice.</small>
     `;
 }
+
 
 
 
