@@ -10,7 +10,6 @@ function calculateHealth() {
     }
     let heightM = height / 100;
     let bmi = (weight / (heightM * heightM)).toFixed(2);
-
     let category = "";
     let diet = "";
 
@@ -47,6 +46,7 @@ function calculateHealth() {
         <small>This is general guidance, not medical advice.</small>
     `;
 }
+
 
 
 
