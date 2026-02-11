@@ -101,8 +101,6 @@ function showDashboard(){
  userDashboard.classList.remove("hidden");
  logoutBtn.classList.remove("hidden");
 }
-
-/* BMI + DIET */
 window.calculateDiet=()=>{
  const w=+weight.value,h=+height.value/100;
  if(w<=0||h<=0) return alert("Invalid input");
