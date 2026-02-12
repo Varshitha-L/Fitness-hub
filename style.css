@@ -1,4 +1,4 @@
-/* Global Reset */
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -118,3 +118,4 @@ hr {
     font-size: 13px;
     color: #777;
 }
+
