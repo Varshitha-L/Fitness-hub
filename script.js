@@ -42,8 +42,3 @@ function calculateHealth() {
         <small>This is general guidance, not medical advice.</small>
     `;
 }
-
-
-
-
-
