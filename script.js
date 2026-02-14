@@ -26,7 +26,6 @@ function calculateHealth() {
         diet = "Strict calorie control, low sugar, more fiber foods.";
     }
 
-    // BMR Calculation
     let bmr;
     if (gender === "male") {
         bmr = 10 * weight + 6.25 * height - 5 * age + 5;
@@ -45,6 +44,7 @@ function calculateHealth() {
         <small>This is general guidance, not medical advice.</small>
     `;
 }
+
 
 
 
