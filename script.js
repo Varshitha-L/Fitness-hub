@@ -33,7 +33,6 @@ function calculateHealth() {
     }
 
     let calories = Math.round(bmr * activity);
-
     document.getElementById("result").innerHTML = `
         <h3>Results</h3>
         <p><strong>BMI:</strong> ${bmi}</p>
@@ -43,6 +42,7 @@ function calculateHealth() {
         <small>This is general guidance, not medical advice.</small>
     `;
 }
+
 
 
 
