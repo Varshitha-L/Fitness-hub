@@ -105,7 +105,6 @@ window.calculateDiet=()=>{
 
  localStorage.setItem("healthData",JSON.stringify({bmi,category,calories}));
 }
-/* WATER */
 const today=new Date().toDateString();
 let water=JSON.parse(localStorage.getItem("water")||"{}");
 water[today]=water[today]||0;
