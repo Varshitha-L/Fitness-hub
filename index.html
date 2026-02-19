@@ -77,7 +77,6 @@ const firebaseConfig={
 
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
- 
 window.login=async()=>{
  await signInWithEmailAndPassword(auth,email.value,password.value);
  showDashboard();
