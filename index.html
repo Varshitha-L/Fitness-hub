@@ -88,7 +88,6 @@ function showDashboard(){
 window.calculateDiet=()=>{
  const w=+weight.value,h=+height.value/100;
  if(w<=0||h<=0) return alert("Invalid input");
-
  const bmi=(w/(h*h)).toFixed(1);
  let category=bmi<18.5?"Underweight":bmi<25?"Normal":bmi<30?"Overweight":"Obese";
 
