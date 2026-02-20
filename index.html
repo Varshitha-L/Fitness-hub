@@ -102,7 +102,6 @@ window.calculateDiet=()=>{
  `<b>Status:</b> ${category}<br>
   Goal: ${goal.value.toUpperCase()}<br>
   Maintain hydration and follow workouts.`;
-
  localStorage.setItem("healthData",JSON.stringify({bmi,category,calories}));
 }
 const today=new Date().toDateString();
