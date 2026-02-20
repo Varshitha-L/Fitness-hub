@@ -89,7 +89,6 @@ window.calculateDiet=()=>{
  if(w<=0||h<=0) return alert("Invalid input");
  const bmi=(w/(h*h)).toFixed(1);
  let category=bmi<18.5?"Underweight":bmi<25?"Normal":bmi<30?"Overweight":"Obese";
-
  let calories=w*24;
  if(goal.value==="loss") calories-=400;
  if(goal.value==="gain") calories+=400;
