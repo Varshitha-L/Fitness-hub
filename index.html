@@ -93,7 +93,6 @@ window.calculateDiet=()=>{
  if(goal.value==="loss") calories-=400;
  if(goal.value==="gain") calories+=400;
  calories=Math.max(calories,1200);
-
  bmiResult.textContent=`BMI: ${bmi} (${category})`;
  dietResult.textContent=`Recommended Calories: ${Math.round(calories)} kcal/day`;
  healthSummary.innerHTML=
