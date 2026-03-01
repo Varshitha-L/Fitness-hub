@@ -1,49 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="./style.css" />
-  </head>
-  <body>
-    <table style="width: 250px; height: 300px" border="solid" cellspacing="6">
-      <!--tb,tr-->
-      <tr class="y">
-        <td colspan="5">0</td>
-      </tr>
-      <tr>
-        <td class="c">C</td>
-        <td class="c">D</td>
-        <td class="c">±</td>
-        <td class="c"></td>
-      </tr>
-      <tr>
-        <td class="e">7</td>
-        <td class="e">8</td>
-        <td class="e">9</td>
-        <td class="c">*</td>
-      </tr>
-      <tr>
-        <td class="e">4</td>
-        <td class="e">5</td>
-        <td class="e">6</td>
-        <td class="c">-</td>
-      </tr>
-      "
-      <tr>
-        <td class="e">1</td>
-        <td class="e">2</td>
-        <td class="e">3</td>
-        <td class="c">+</td>
-      </tr>
-      <tr>
-        <td class="e">%</td>
-        <td class="e">0</td>
-        <td class="e">.</td>
-        <td class="a">=</td>
-      </tr>
-      <script></script>
-    </table>
-  </body>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Calculator</title>
+
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #1e1e2f, #2c2c54);
+    font-family: Arial, sans-serif;
+  }
+
+  .calculator {
+    background: #2f3640;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  }
+
+  table {
+    border-collapse: separate;
+    border-spacing: 8px;
+  }
+
+  .display {
+    background: #1e272e;
+    color: #00ffcc;
+    font-size: 24px;
+    text-align: right;
+    padding: 10px;
+    border-radius: 6px;
+  }
+
+  td {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    transition: 0.2s;
+  }
+
+  .number {
+    background: #dcdde1;
+  }
+
+  .operator {
+    background: #fbc531;
+  }
+
+  .equal {
+    background: #44bd32;
+    color: white;
+  }
+
+  .clear {
+    background: #e84118;
+    color: white;
+  }
+
+  td:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="calculator">
+  <table>
+    <tr>
+      <td colspan="4" id="display" class="display">0</td>
+    </tr>
+
+    <tr>
+      <td class="clear">C</td>
+      <td class="clear">D</td>
+      <td class="operator">%</td>
+      <td class="operator">/</td>
+    </tr>
+
+    <tr>
+      <td class="number">7</td>
+      <td class="number">8</td>
+      <td class="number">9</td>
+      <td class="operator">*</td>
+    </tr>
+
+    <tr>
+      <td class="number">4</td>
+      <td class="number">5</td>
+      <td class="number">6</td>
+      <td class="operator">-</td>
+    </tr>
+
+    <tr>
+      <td class="number">1</td>
+      <td class="number">2</td>
+      <td class="number">3</td>
+      <td class="operator">+</td>
+    </tr>
+
+    <tr>
+      <td class="number">0</td>
+      <td class="number">.</td>
+      <td colspan="2" class="equal">=</td>
+    </tr>
+  </table>
+</div>
+
+<script>
+  const display = document.getElementById("display");
+  const buttons = document.querySelectorAll("td");
+
+  buttons.forEach(button => {
+    button.addEventListener("click", () => {
+      const value = button.textContent;
+
+      if (value === "C") {
+        display.textContent = "0";
+      } 
+      else if (value === "D") {
+        display.textContent = display.textContent.slice(0, -1) || "0";
+      }
+      else if (value === "=") {
+        try {
+          display.textContent = eval(display.textContent);
+        } catch {
+          display.textContent = "Error";
+        }
+      } 
+      else {
+        if (display.textContent === "0") {
+          display.textContent = value;
+        } else {
+          display.textContent += value;
+        }
+      }
+    });
+  });
+</script>
+
+</body>
 </html>
