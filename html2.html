@@ -3,26 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Fitness Hub | About</title>
     <link rel="stylesheet" href="./style.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #f4f7fa, #e8f0ff);
+        }
+
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .content {
+            min-height: 60vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            width: 350px;
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .info {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #555;
+        }
+
+        #footerh {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                width: 90%;
+            }
+        }
+    </style>
 </head>
+
 <body>
+
     <div class="header">
-        <center>
-        </center>
+        Fitness Hub
     </div>
-    <div>
+
+    <div class="content">
+        <div class="card">
+            <h2>Student Information</h2>
+            <div class="info"><strong>Name:</strong> Varshitha</div>
+            <div class="info"><strong>SRN:</strong> R24EF183</div>
+            <div class="info"><strong>Section:</strong> D</div>
+            <div class="info"><strong>Department:</strong> CSE</div>
+        </div>
     </div>
+
     <div id="footerh">
-        <center>
-              <br> NAME:Varshitha</br>
-              <br> SRN:R24EF183</br>
-              <br> SECTION:D</br>
-              <br> DEPARTMENT:CSE</br>         
-        </center>
-    </div>        
+        © 2026 Fitness Hub | Designed by Varshitha
+    </div>
+
 </body>
 </html>
-
-
-
