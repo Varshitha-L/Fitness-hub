@@ -1,44 +1,84 @@
 function calculateHealth() {
-    let height = document.getElementById("height").value;
-    let weight = document.getElementById("weight").value;
-    let age = document.getElementById("age").value;
-    let gender = document.getElementById("gender").value;
-    let activity = document.getElementById("activity").value;
-    if (!height || !weight || !age) {
-        alert("Please fill all fields");
+    // Get values and convert to numbers
+    const height = parseFloat(document.getElementById("height").value);
+    const weight = parseFloat(document.getElementById("weight").value);
+    const age = parseInt(document.getElementById("age").value);
+    const gender = document.getElementById("gender").value;
+    const activity = parseFloat(document.getElementById("activity").value);
+
+    // Validation
+    if (!height || !weight || !age || !gender || !activity) {
+        alert("Please fill all fields correctly.");
         return;
     }
-    let heightM = height / 100;
-    let bmi = (weight / (heightM * heightM)).toFixed(2);
-    let category = "";
-    let diet = "";
-    if (bmi < 18.5) {
-        category = "Underweight";
-        diet = "High-calorie diet with proteins, nuts, milk, rice.";
-    } else if (bmi < 25) {
-        category = "Normal";
-        diet = "Balanced diet with fruits, vegetables, proteins.";
-    } else if (bmi < 30) {
-        category = "Overweight";
-        diet = "Low-carb, high-protein diet with more vegetables.";
-    } else {
-        category = "Obese";
-        diet = "Strict calorie control, low sugar, more fiber foods.";
-    }
-    let bmr;
-    if (gender === "male") {
-        bmr = 10 * weight + 6.25 * height - 5 * age + 5;
-    } else {
-        bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+
+    if (height <= 0 || weight <= 0 || age <= 0) {
+        alert("Height, weight and age must be positive values.");
+        return;
     }
 
-    let calories = Math.round(bmr * activity);
+    // BMI Calculation
+    const heightM = height / 100;
+    const bmi = weight / (heightM * heightM);
+    const bmiRounded = bmi.toFixed(2);
+
+    let category = "";
+    let diet = "";
+    let bmiColor = "";
+
+    if (bmi < 18.5) {
+        category = "Underweight";
+        bmiColor = "#3498db";
+        diet = "Increase calorie intake with healthy fats, dairy, rice, nuts, and protein-rich foods.";
+    } 
+    else if (bmi < 24.9) {
+        category = "Normal Weight";
+        bmiColor = "#2ecc71";
+        diet = "Maintain balanced meals: lean protein, vegetables, fruits, whole grains.";
+    } 
+    else if (bmi < 29.9) {
+        category = "Overweight";
+        bmiColor = "#f39c12";
+        diet = "Reduce refined carbs, increase fiber, lean proteins, and daily physical activity.";
+    } 
+    else {
+        category = "Obese";
+        bmiColor = "#e74c3c";
+        diet = "Follow structured calorie deficit plan, avoid sugary drinks, prioritize fiber and protein.";
+    }
+
+    // BMR (Mifflin-St Jeor Equation)
+    let bmr;
+    if (gender === "male") {
+        bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+    } else {
+        bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+    }
+
+    // Daily calorie needs
+    const maintenanceCalories = Math.round(bmr * activity);
+    const weightLossCalories = Math.round(maintenanceCalories - 500);
+    const weightGainCalories = Math.round(maintenanceCalories + 500);
+
+    // Display Result
     document.getElementById("result").innerHTML = `
-        <h3>Results</h3>
-        <p><strong>BMI:</strong> ${bmi}</p>
-        <p><strong>Category:</strong> ${category}</p>
-        <p><strong>Daily Calories:</strong> ${calories} kcal</p>
-        <p><strong>Diet Plan:</strong> ${diet}</p>
-        <small>This is general guidance, not medical advice.</small>
+        <div style="padding:15px; border-radius:10px; background:#f4f6f9;">
+            <h3>Health Report</h3>
+            <p><strong>BMI:</strong> 
+                <span style="color:${bmiColor}; font-weight:bold;">
+                    ${bmiRounded}
+                </span>
+            </p>
+            <p><strong>Category:</strong> ${category}</p>
+            <hr>
+            <p><strong>Maintenance Calories:</strong> ${maintenanceCalories} kcal/day</p>
+            <p><strong>For Weight Loss:</strong> ${weightLossCalories} kcal/day</p>
+            <p><strong>For Weight Gain:</strong> ${weightGainCalories} kcal/day</p>
+            <hr>
+            <p><strong>Suggested Diet:</strong> ${diet}</p>
+            <small style="color:gray;">
+                This is general guidance only. Consult a healthcare professional for medical advice.
+            </small>
+        </div>
     `;
 }
