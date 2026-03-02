@@ -1,83 +1,93 @@
 function calculateHealth() {
-    // Get values and convert to numbers
+
     const height = parseFloat(document.getElementById("height").value);
     const weight = parseFloat(document.getElementById("weight").value);
     const age = parseInt(document.getElementById("age").value);
     const gender = document.getElementById("gender").value;
     const activity = parseFloat(document.getElementById("activity").value);
+    const goal = document.getElementById("goal").value; // lose / maintain / gain
 
-    // Validation
-    if (!height || !weight || !age || !gender || !activity) {
-        alert("Please fill all fields correctly.");
+    // Basic Validation
+    if (!height || !weight || !age || !gender || !activity || !goal) {
+        alert("Please complete all fields.");
         return;
     }
 
-    if (height <= 0 || weight <= 0 || age <= 0) {
-        alert("Height, weight and age must be positive values.");
+    if (height < 50 || height > 250 || weight < 20 || weight > 300 || age < 5 || age > 120) {
+        alert("Please enter realistic values.");
         return;
     }
 
-    // BMI Calculation
+    // BMI
     const heightM = height / 100;
     const bmi = weight / (heightM * heightM);
     const bmiRounded = bmi.toFixed(2);
 
-    let category = "";
-    let diet = "";
-    let bmiColor = "";
+    let category, bmiColor, healthScore;
 
     if (bmi < 18.5) {
         category = "Underweight";
         bmiColor = "#3498db";
-        diet = "Increase calorie intake with healthy fats, dairy, rice, nuts, and protein-rich foods.";
-    } 
-    else if (bmi < 24.9) {
-        category = "Normal Weight";
+        healthScore = 60;
+    } else if (bmi < 24.9) {
+        category = "Normal";
         bmiColor = "#2ecc71";
-        diet = "Maintain balanced meals: lean protein, vegetables, fruits, whole grains.";
-    } 
-    else if (bmi < 29.9) {
+        healthScore = 90;
+    } else if (bmi < 29.9) {
         category = "Overweight";
         bmiColor = "#f39c12";
-        diet = "Reduce refined carbs, increase fiber, lean proteins, and daily physical activity.";
-    } 
-    else {
+        healthScore = 70;
+    } else {
         category = "Obese";
         bmiColor = "#e74c3c";
-        diet = "Follow structured calorie deficit plan, avoid sugary drinks, prioritize fiber and protein.";
+        healthScore = 40;
     }
 
-    // BMR (Mifflin-St Jeor Equation)
-    let bmr;
-    if (gender === "male") {
-        bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
-    } else {
-        bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
-    }
+    // BMR (Mifflin-St Jeor)
+    let bmr = gender === "male"
+        ? (10 * weight) + (6.25 * height) - (5 * age) + 5
+        : (10 * weight) + (6.25 * height) - (5 * age) - 161;
 
-    // Daily calorie needs
     const maintenanceCalories = Math.round(bmr * activity);
-    const weightLossCalories = Math.round(maintenanceCalories - 500);
-    const weightGainCalories = Math.round(maintenanceCalories + 500);
 
-    // Display Result
+    let targetCalories;
+    if (goal === "lose") {
+        targetCalories = maintenanceCalories - 500;
+    } else if (goal === "gain") {
+        targetCalories = maintenanceCalories + 500;
+    } else {
+        targetCalories = maintenanceCalories;
+    }
+
+    // Extra Recommendations
+    const protein = Math.round(weight * 1.6); // grams
+    const water = Math.round(weight * 35); // ml
+
     document.getElementById("result").innerHTML = `
-        <div style="padding:15px; border-radius:10px; background:#f4f6f9;">
-            <h3>Health Report</h3>
+        <div style="padding:20px;border-radius:12px;background:#f8f9fa;">
+            <h3>Advanced Health Report</h3>
+
             <p><strong>BMI:</strong> 
-                <span style="color:${bmiColor}; font-weight:bold;">
+                <span style="color:${bmiColor};font-weight:bold;">
                     ${bmiRounded}
                 </span>
             </p>
+
             <p><strong>Category:</strong> ${category}</p>
+            <p><strong>Health Score:</strong> ${healthScore}/100</p>
+
             <hr>
+
             <p><strong>Maintenance Calories:</strong> ${maintenanceCalories} kcal/day</p>
-            <p><strong>For Weight Loss:</strong> ${weightLossCalories} kcal/day</p>
-            <p><strong>For Weight Gain:</strong> ${weightGainCalories} kcal/day</p>
+            <p><strong>Target Calories (${goal}):</strong> ${targetCalories} kcal/day</p>
+
             <hr>
-            <p><strong>Suggested Diet:</strong> ${diet}</p>
+
+            <p><strong>Recommended Protein:</strong> ${protein} g/day</p>
+            <p><strong>Recommended Water Intake:</strong> ${water} ml/day</p>
+
             <small style="color:gray;">
-                This is general guidance only. Consult a healthcare professional for medical advice.
+                This tool provides general fitness guidance. Consult a medical professional for personalized advice.
             </small>
         </div>
     `;
