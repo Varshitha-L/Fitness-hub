@@ -149,8 +149,7 @@ window.downloadPDF=()=>{
 function applyTheme(t){
  document.body.className=t;
  localStorage.setItem("theme",t);
-}
-window.toggleTheme=()=>applyTheme(
+}window.toggleTheme=()=>applyTheme(
  document.body.classList.contains("dark")?"light":"dark"
 );
 applyTheme(localStorage.getItem("theme")||"dark");
