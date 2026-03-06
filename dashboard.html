@@ -1,1 +1,110 @@
-    <title>Dashboard</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Health Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f4f6f9;
+      color: #333;
+    }
+    .card {
+      background: #fff;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #2c3e50;
+    }
+    input {
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 200px;
+    }
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    ul li {
+      display: flex;
+      justify-content: space-between;
+      background: #f9f9f9;
+      margin: 5px 0;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+    ul li button {
+      background: #e74c3c;
+      padding: 3px 8px;
+      font-size: 12px;
+      border-radius: 3px;
+    }
+    ul li button:hover {
+      background: #c0392b;
+    }
+    .progress {
+      height: 20px;
+      background: #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+    .progress-bar {
+      height: 100%;
+      background: #27ae60;
+      width: 0%;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Daily Food Tracker</h2>
+    <input id="foodName" placeholder="Food name">
+    <input id="foodCalories" type="number" placeholder="Calories">
+    <button>Add Food</button>
+    
+    <ul id="foodList">
+      <!-- Example item -->
+      <li>
+        Apple - 95 cal 
+        <button class="delete-btn">X</button>
+      </li>
+    </ul>
+    
+    <p>Total Calories: <span id="totalCalories">0</span> / 2000</p>
+    <div class="progress">
+      <div id="calorieProgress" class="progress-bar"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Water Intake</h2>
+    <button>Add Glass</button>
+    
+    <p>Water: <span id="waterCount">0</span> / 8</p>
+    <div class="progress">
+      <div id="waterProgress" class="progress-bar"></div>
+    </div>
+  </div>
+
+</body>
+</html>
