@@ -53,7 +53,6 @@ function calculateHealth() {
     const carbsG = Math.round(carbsCal / 4);
     const fatG = Math.round(fatCal / 9);
 
-    // ===== IDEAL WEIGHT RANGE (BMI 18.5 - 24.9) =====
     const minWeight = (18.5 * heightM * heightM).toFixed(1);
     const maxWeight = (24.9 * heightM * heightM).toFixed(1);
 
