@@ -153,6 +153,7 @@ function applyTheme(t){
 }window.toggleTheme=()=>applyTheme(
  document.body.classList.contains("dark")?"light":"dark"
 );
+
 applyTheme(localStorage.getItem("theme")||"dark");
 </script>
 </body>
